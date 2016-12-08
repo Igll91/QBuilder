@@ -11,7 +11,7 @@ namespace AppBundle\Model\Validator;
 
 use AppBundle\Helper\ValueChecker;
 
-class NumMinValidator extends MinValidator
+class MinNumValidator extends MinValidator
 {
     /**
      * Minimal allowed numeric value.
