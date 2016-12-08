@@ -2,7 +2,7 @@
 Feature: MinStringValidator
   In order to validate allowed minimal string length
   As an application user
-  I need to check length of given string with the defined validator rule minimal length
+  I need to compare length of given string with the defined validator rule minimal length
 
   Scenario: Validating smaller string
     Given that minimal allowed value for "MinStringValidator" is 10

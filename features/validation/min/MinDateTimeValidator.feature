@@ -14,6 +14,11 @@ Feature: MinDateTimeValidator
     When I try to validate value "2000-01-04 23:59:59+00:00" of type "DateTime"
     Then validation should return false
 
+  Scenario: Validating DateTime equal to minimal
+    Given that minimal allowed value for "MinDateTimeValidator" is "2000-01-05 00:00:00+00:00" of type "DateTime"
+    When I try to validate value "2000-01-05 00:00:00+00:00" of type "DateTime"
+    Then validation should return true
+
   Scenario: Validating DateTime after minimal
     Given that minimal allowed value for "MinDateTimeValidator" is "2000-01-05 00:00:00+00:00" of type "DateTime"
     When I try to validate value "2000-02-01 00:00:00+00:00" of type "DateTime"
