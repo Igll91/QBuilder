@@ -23,6 +23,17 @@ final class ValueChecker
         return $value;
     }
 
+    public static function getPositiveNumericOrEx($value)
+    {
+        $value = self::getNumericOrEx($value);
+
+        if ($value <= 0) {
+            throw new \InvalidArgumentException("Value (${value}) is not positive!");
+        }
+
+        return $value;
+    }
+
     public static function getStringOrEx($value)
     {
         if (!is_string($value)) {
