@@ -1,6 +1,5 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use AppBundle\Model\Validator\Validator;
 
@@ -88,7 +87,7 @@ class MinValidatorContext implements Context
     {
         try {
             $class           = $this->namespace . $arg1;
-            $this->validator = new $class($arg1);
+            $this->validator = new $class($arg2);
         } catch (Exception $ex) {
             $this->error = $ex;
         }
