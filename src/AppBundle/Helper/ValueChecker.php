@@ -52,12 +52,21 @@ final class ValueChecker
         return $value;
     }
 
+    /**
+     * @param $value string Time value in format H:i:s (for example 23:59:59)
+     *
+     * @return \DateTime
+     */
     public static function getTimeOrEx($value)
     {
-        $transformedVal = strtotime($value);
+        if (!preg_match('/^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]|[0-5][0-9]:[0-5][0-9])$/', $value)) {
+            throw new \InvalidArgumentException("Value (${value}) is not valid Time(H:i:s)!");
+        }
+
+        $transformedVal = \DateTime::createFromFormat('H:i:s', $value);
 
         if (!$transformedVal) {
-            throw new \InvalidArgumentException("Value (${value}) is not valid Time!");
+            throw new \InvalidArgumentException("Value (${value}) is not valid Time(H:i:s)!");
         }
 
         return $transformedVal;

@@ -2,7 +2,8 @@
 Feature: MinDateTimeValidator
   In order to validate allowed minimal DateTime
   As an application user
-  I need to check whether given DateTime occurred after allowed
+  I need to check whether given DateTime occurred after or during allowed
+  If so it should return true
 
   Scenario: Validating DateTime before minimal
     Given that minimal allowed value for "MinDateTimeValidator" is "2000-01-05 00:00:00+00:00" of type "DateTime"
