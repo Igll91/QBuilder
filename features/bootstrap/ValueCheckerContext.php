@@ -23,7 +23,7 @@ class ValueCheckerContext implements Context
 
         try {
             $this->value = \AppBundle\Helper\ValueChecker::$f($value);
-        } catch (InvalidArgumentException $ex) {
+        } catch (\InvalidArgumentException $ex) {
             $this->error = $ex;
         }
     }
@@ -45,6 +45,14 @@ class ValueCheckerContext implements Context
     }
 
     /**
+     * @When I try to get integer value :arg1
+     */
+    public function iTryToGetIntegerValue($arg1)
+    {
+        $this->getVal((int)$arg1);
+    }
+
+    /**
      * @Then I should get :arg1
      */
     public function iShouldGet($arg1)
@@ -58,5 +66,13 @@ class ValueCheckerContext implements Context
     public function iShouldGetError($arg1)
     {
         PHPUnit_Framework_Assert::assertEquals($arg1, get_class($this->error));
+    }
+
+    /**
+     * @Then I should get valid DateTime object
+     */
+    public function iShouldGetValidDatetimeObject()
+    {
+        PHPUnit_Framework_Assert::assertEquals("DateTime", get_class($this->value));
     }
 }

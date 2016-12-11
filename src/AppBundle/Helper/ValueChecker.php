@@ -14,6 +14,14 @@ final class ValueChecker
 
     private function __construct() { }
 
+    /**
+     * Checks whether passed value is numeric.
+     *
+     * @param $value mixed Value to be checked if numeric.
+     * @throws \InvalidArgumentException If value is not numeric.
+     *
+     * @return mixed Returns passed numeric value or throws InvalidArgumentException.
+     */
     public static function getNumericOrEx($value)
     {
         if (!is_numeric($value)) {
@@ -23,6 +31,14 @@ final class ValueChecker
         return $value;
     }
 
+    /**
+     * Checks whether passed value is positive numeric.
+     *
+     * @param $value mixed Value to be checked if it is positive numeric.
+     * @throws \InvalidArgumentException If value is not positive numeric.
+     *
+     * @return mixed Returns passed value or throws InvalidArgumentException.
+     */
     public static function getPositiveNumericOrEx($value)
     {
         $value = self::getNumericOrEx($value);
@@ -34,6 +50,14 @@ final class ValueChecker
         return $value;
     }
 
+    /**
+     * Checks whether passed value is valid string.
+     *
+     * @param $value mixed Value to be checked if it is string.
+     * @throws \InvalidArgumentException If value is not valid string.
+     *
+     * @return mixed Returns passed value or throws InvalidArgumentException.
+     */
     public static function getStringOrEx($value)
     {
         if (!is_string($value)) {
@@ -43,6 +67,14 @@ final class ValueChecker
         return $value;
     }
 
+    /**
+     * Checks whether passed value is valid DateTime.
+     *
+     * @param $value mixed Value to be checked if it is DateTime.
+     * @throws \InvalidArgumentException If value is not valid DateTime.
+     *
+     * @return mixed Returns value or throws InvalidArgumentException.
+     */
     public static function getDateTimeOrEx($value)
     {
         if (!is_a($value, 'DateTime')) {
@@ -53,9 +85,14 @@ final class ValueChecker
     }
 
     /**
-     * @param $value string Time value in format H:i:s (for example 23:59:59)
+     * Checks whether passed value is valid DateTime.
      *
-     * @return \DateTime
+     * Passed value must be valid DateTime in format (H:i:s) or without seconds (H:i).
+     *
+     * @param $value string Value to be checked if it is in valid DateTime format.
+     * @throws \InvalidArgumentException If value is not valid excpected Time format.
+     *
+     * @return \DateTime Returns value or throws InvalidArgumentException.
      */
     public static function getTimeOrEx($value)
     {
@@ -64,6 +101,10 @@ final class ValueChecker
         }
 
         $transformedVal = \DateTime::createFromFormat('H:i:s', $value);
+
+        if (!$transformedVal) {
+            $transformedVal = \DateTime::createFromFormat('H:i', $value);
+        }
 
         if (!$transformedVal) {
             throw new \InvalidArgumentException("Value (${value}) is not valid Time(H:i:s)!");
