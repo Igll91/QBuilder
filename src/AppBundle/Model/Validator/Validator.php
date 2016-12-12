@@ -23,6 +23,7 @@ abstract class Validator
 
     /**
      * @param $value mixed Value to be validated.
+     * @throws \InvalidArgumentException If passed value is not valid type.
      *
      * @return mixed True if valid, false otherwise.
      */

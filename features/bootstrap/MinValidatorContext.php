@@ -75,30 +75,6 @@ class MinValidatorContext implements Context
     }
 
     /**
-     * @Then validation should return false
-     */
-    public function validationShouldReturnFalse()
-    {
-        PHPUnit_Framework_Assert::assertFalse($this->result);
-    }
-
-    /**
-     * @Then validation should return true
-     */
-    public function validationShouldReturnTrue()
-    {
-        PHPUnit_Framework_Assert::assertTrue($this->result);
-    }
-
-    /**
-     * @Then I should get error :arg1
-     */
-    public function iShouldGetError($arg1)
-    {
-        PHPUnit_Framework_Assert::assertEquals($arg1, get_class($this->error));
-    }
-
-    /**
      * @Given that minimal allowed invalid value for :arg1 is :arg2
      */
     public function thatMinimalAllowedInvalidValueForIs($arg1, $arg2)

@@ -22,7 +22,7 @@ class MinStringValidator extends MinValidator
 
     public function __construct($minValue)
     {
-        $this->minValue = ValueChecker::getPositiveNumericOrEx($minValue);
+        $this->minValue = ValueChecker::getPositiveIntOrEx($minValue);
     }
 
     /**
