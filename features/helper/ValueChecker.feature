@@ -14,6 +14,26 @@ Feature: ValueChecker
     When I try to get value "3214"
     Then I should get 3214
 
+  Scenario: Get valid integer value
+    Given that function i want to use is "getIntOrEx"
+    When I try to get value "3214"
+    Then I should get 3214
+
+  Scenario: Get invalid integer value
+    Given that function i want to use is "getIntOrEx"
+    When I try to get value "ccasd"
+    Then I should get error "InvalidArgumentException"
+
+  Scenario: Get valid positive integer value
+    Given that function i want to use is "getPositiveIntOrEx"
+    When I try to get value "122"
+    Then I should get 122
+
+  Scenario: Get invalid positive integer value
+    Given that function i want to use is "getPositiveIntOrEx"
+    When I try to get value "-122"
+    Then I should get error "InvalidArgumentException"
+
   Scenario: Get valid numeric float value
     Given that function i want to use is "getNumericOrEx"
     When I try to get value 25.21421
