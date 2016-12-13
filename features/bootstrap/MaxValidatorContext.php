@@ -24,4 +24,13 @@ class MaxValidatorContext extends ValidatorContext
     {
         $this->createValidator($arg1, array($arg2));
     }
+
+    /**
+     * @Given that maximal allowed value for :arg1 is :arg2 of type :arg3
+     */
+    public function thatMaximalAllowedValueForIsOfType($arg1, $arg2, $arg3)
+    {
+        $this->createValidator($arg1, array(new $arg3($arg2)));
+    }
+
 }
