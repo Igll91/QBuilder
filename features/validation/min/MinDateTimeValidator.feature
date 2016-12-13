@@ -32,5 +32,5 @@ Feature: MinDateTimeValidator
 
   Scenario: Passed invalid argument for validation
     Given that minimal allowed value for "MinDateTimeValidator" is "2000-01-05 00:00:00+00:00" of type "DateTime"
-    When I try to validate invalid value "Invalid string value"
+    When I try to validate value "Invalid string value"
     Then I should get error "InvalidArgumentException"

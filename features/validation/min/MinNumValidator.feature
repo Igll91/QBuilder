@@ -40,5 +40,5 @@ Feature: MinNumValidator
 
   Scenario: Passed invalid validation parameter
     Given that minimal allowed value for "MinNumValidator" is "505"
-    When I try to validate invalid value 'c'
+    When I try to validate value 'c'
     Then I should get error "InvalidArgumentException"

@@ -35,5 +35,5 @@ Feature: MinTimeValidator
 
   Scenario: Passed invalid validation parameter
     Given that minimal allowed value for "MinTimeValidator" is "22:00:00"
-    When I try to validate invalid value 'c'
+    When I try to validate value 'c'
     Then I should get error "InvalidArgumentException"

@@ -25,7 +25,7 @@ Feature: MinStringValidator
     Then I should get error "InvalidArgumentException"
 
   Scenario: Passed negative length limit
-    Given that minimal allowed invalid value for "MinStringValidator" is -1
+    Given that minimal allowed invalid value for "MinStringValidator" is "-1"
     Then I should get error "InvalidArgumentException"
 
   Scenario: Passed zero as length limit

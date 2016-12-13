@@ -43,6 +43,8 @@ abstract class ValidatorContext implements Context
 
     public function __construct()
     {
+        //TODO: handle validator selection through constructor... so no mistakes are made in feature tests
+
         $reflectionClass = new ReflectionClass(Validator::class);
         $this->namespace = $reflectionClass->getNamespaceName() . '\\';
     }
@@ -55,12 +57,10 @@ abstract class ValidatorContext implements Context
     {
         // TODO: Think about this one  and exception handling process inhere !
 
-        try {
+        $this->executeOrCatch(function () use ($className, $validatorArgs) {
             $reflector       = new ReflectionClass($this->namespace . $className);
             $this->validator = $reflector->newInstanceArgs($validatorArgs);
-        } catch (Exception $ex) {
-            $this->error = $ex;
-        }
+        });
     }
 
 //======================================================================================================================
