@@ -9,6 +9,9 @@ default:
         helper_features:
           paths: ["%paths.base%/features/helper"]
           contexts: ["ValueCheckerContext"]
+        filtertype_features:
+          paths: ["%paths.base%/features/model/filter"]
+          contexts: ["FilterTypeContext"]
 
     extensions:
         Behat\Symfony2Extension: ~

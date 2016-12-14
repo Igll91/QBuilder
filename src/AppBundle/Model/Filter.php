@@ -1,4 +1,5 @@
 <?php namespace AppBundle\Model;
+use AppBundle\Model\Filter\FilterType;
 
 /**
  * Represents querybuilder Filter object.
@@ -24,9 +25,7 @@ abstract class Filter
     /**
      * Querybuilder type of the field.
      *
-     * Available types are string, integer, double, date, time, datetime and boolean
-     *
-     * @var string
+     * @var FilterType
      */
     private $type;
 
@@ -55,7 +54,7 @@ abstract class Filter
      */
     private $defaultValue;
 
-    public function __construct($id, $type)
+    public function __construct($id, FilterType $type)
     {
         // Required values for successful build
         $this->identifier = $id;
