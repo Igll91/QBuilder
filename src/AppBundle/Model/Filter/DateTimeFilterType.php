@@ -13,7 +13,7 @@ class DateTimeFilterType extends FilterType
 {
     private $format;
 
-    public function __construct($format = "d.m.Y.")
+    public function __construct($format = "Y-m-d h:i:s")
     {
         parent::__construct("datetime");
         $this->format = $format;

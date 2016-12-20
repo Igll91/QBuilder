@@ -11,11 +11,11 @@ namespace AppBundle\Model\Filter;
 
 use AppBundle\Helper\ValueChecker;
 
-class DateFilerType extends FilterType
+class DateFilterType extends FilterType
 {
     private $format;
 
-    public function __construct($format = "d.m.Y.")
+    public function __construct($format = "Y-m-d")
     {
         parent::__construct("date");
         $this->format = $format;
