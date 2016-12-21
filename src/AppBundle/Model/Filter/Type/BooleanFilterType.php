@@ -6,7 +6,7 @@
  * Time: 20:25
  */
 
-namespace AppBundle\Model\Filter;
+namespace AppBundle\Model\Filter\Type;
 
 
 class BooleanFilterType extends FilterType

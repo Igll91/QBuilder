@@ -10,7 +10,7 @@ default:
           paths: ["%paths.base%/features/helper"]
           contexts: ["ValueCheckerContext"]
         filtertype_features:
-          paths: ["%paths.base%/features/model/filter"]
+          paths: ["%paths.base%/features/model/filter/type"]
           contexts: ["FilterTypeContext"]
 
     extensions:

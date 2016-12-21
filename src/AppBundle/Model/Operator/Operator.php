@@ -54,6 +54,30 @@ abstract class Operator
     /**
      * @return string
      */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfInputs()
+    {
+        return $this->numberOfInputs;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isMultiple()
+    {
+        return $this->multiple;
+    }
+
+    /**
+     * @return string
+     */
     public function getOptgroup()
     {
         return $this->optgroup;

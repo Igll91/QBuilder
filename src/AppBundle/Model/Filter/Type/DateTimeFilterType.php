@@ -6,7 +6,7 @@
  * Time: 20:30
  */
 
-namespace AppBundle\Model\Filter;
+namespace AppBundle\Model\Filter\Type;
 
 
 class DateTimeFilterType extends FilterType

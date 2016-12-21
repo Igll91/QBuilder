@@ -3,22 +3,25 @@
  * Created by PhpStorm.
  * User: silvio
  * Date: 14.12.2016.
- * Time: 20:21
+ * Time: 20:01
  */
 
-namespace AppBundle\Model\Filter;
+namespace AppBundle\Model\Filter\Type;
 
 
 use AppBundle\Helper\ValueChecker;
 
-class TimeFilterType extends FilterType
+class StringFilterType extends FilterType
 {
-    public function __construct() { parent::__construct("time"); }
+    public function __construct()
+    {
+        parent::__construct("string");
+    }
 
     public function validateValue($value)
     {
         try {
-            ValueChecker::getTimeOrEx($value);
+            ValueChecker::getStringOrEx($value);
 
             return TRUE;
         } catch (\InvalidArgumentException $ex) {

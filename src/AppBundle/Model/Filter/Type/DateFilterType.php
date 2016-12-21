@@ -6,7 +6,7 @@
  * Time: 20:15
  */
 
-namespace AppBundle\Model\Filter;
+namespace AppBundle\Model\Filter\Type;
 
 
 use AppBundle\Helper\ValueChecker;
