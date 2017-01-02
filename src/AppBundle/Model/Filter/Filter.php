@@ -1,5 +1,6 @@
-<?php namespace AppBundle\Model;
-use AppBundle\Model\Filter\FilterType;
+<?php namespace AppBundle\Model\Filter;
+
+use AppBundle\Model\Filter\Type\FilterType;
 
 /**
  * Represents querybuilder Filter object.
@@ -14,7 +15,7 @@ use AppBundle\Model\Filter\FilterType;
  * Date: 06.12.2016.
  * Time: 22:07
  */
-abstract class Filter
+class Filter
 {
 
     /**
@@ -54,10 +55,10 @@ abstract class Filter
      */
     private $defaultValue;
 
-    public function __construct($id, FilterType $type)
+    public function __construct($identifier, FilterType $type)
     {
         // Required values for successful build
-        $this->identifier = $id;
+        $this->identifier = $identifier;
         $this->type       = $type;
     }
 
@@ -142,5 +143,4 @@ abstract class Filter
 
         return $this;
     }
-
 }

@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Helper\ValueChecker;
+use AppBundle\Model\Filter\Filter;
+use AppBundle\Model\Filter\FilterPair;
 use AppBundle\Model\Filter\FilterPairHolder;
+use AppBundle\Model\Filter\Type\DoubleFilterType;
+use AppBundle\Model\Filter\Type\IntegerFilterType;
 use AppBundle\Model\Parser\MongoDbParser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,35 +19,39 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         $json = '{
   "$and": [
     {
       "price": {
-        "$lt": 10.25
+        "$gte": 22,
+        "$lte": 33
       }
     },
     {
       "$or": [
         {
+          "category": null
+        },
+        {
           "category": 2
         },
         {
           "category": 1
-        },
-        {
-          "price": {
-            "$gte": 13,
-            "$lte": 213
-          }
         }
       ]
+    },
+    {
+      "price": 35
     }
   ]
 }';
+        $fph  = new FilterPairHolder();
+        $fp1  = new FilterPair(new Filter('price', new DoubleFilterType()));
+        $fp2  = new FilterPair(new Filter('category', new IntegerFilterType()));
+        $fph->addAllFilterPairs(array($fp1, $fp2));
 
-        $mongoDbParser = new MongoDbParser();
-        $mongoDbParser->parseQuery($json, new FilterPairHolder());
+        $mongoDbParser = new MongoDbParser($fph);
+        $mongoDbParser->parseQuery($json);
 
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [

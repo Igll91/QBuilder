@@ -8,7 +8,6 @@
 
 namespace AppBundle\Helper;
 
-
 final class ValueChecker
 {
 
@@ -90,9 +89,9 @@ final class ValueChecker
      *
      * @return mixed Returns passed value or throws InvalidArgumentException.
      */
-    public
-    static function getStringOrEx($value)
-    {
+    public static function getStringOrEx(
+        $value
+    ) {
         if (!is_string($value)) {
             throw new \InvalidArgumentException("Value (${value}) is not string!");
         }
@@ -146,5 +145,23 @@ final class ValueChecker
         }
 
         return $transformedVal;
+    }
+
+    /**
+     * Throws exception if given value is null.
+     *
+     * Plain simple as that. If given value is equal to null, InvalidArgumentException will be thrown.
+     *
+     * @param  mixed $val Value to be checked if null.
+     * @param string $msg Message to be set to exception.
+     *
+     * @throws \InvalidArgumentException If value is null.
+     */
+    public static function throwExIfNull($val, $msg = 'This value is not allowed to be null.')
+    {
+//     * TODO:  behat testing
+        if ($val === null) {
+            throw new \InvalidArgumentException($msg);
+        }
     }
 }

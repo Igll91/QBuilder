@@ -8,10 +8,8 @@
 
 namespace AppBundle\Model\Filter\Type;
 
-
 abstract class FilterType
 {
-
     /**
      * Identifier used by frontend.
      *
@@ -29,7 +27,7 @@ abstract class FilterType
      *
      * @return boolean True if valid, false otherwise.
      */
-    public abstract function validateValue($value);
+    abstract public function validateValue($value);
 
 //======================================================================================================================
 // GETTERS & SETTERS
@@ -42,5 +40,4 @@ abstract class FilterType
     {
         return $this->identifier;
     }
-
 }

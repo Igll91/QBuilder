@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\Filter;
 
-use AppBundle\Model\Filter;
 use AppBundle\Model\Operator\Operator;
 
 class FilterPair
@@ -38,6 +37,11 @@ class FilterPair
         }
 
         $this->operators[] = $operator;
+    }
+
+    public function hasOperator(Operator $operator)
+    {
+        return in_array($operator, $this->operators);
     }
 
 //======================================================================================================================

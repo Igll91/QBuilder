@@ -8,9 +8,6 @@
 
 namespace AppBundle\Model\Filter\Type;
 
-
-use AppBundle\Helper\ValueChecker;
-
 class DateFilterType extends FilterType
 {
     private $format;
@@ -28,6 +25,4 @@ class DateFilterType extends FilterType
 
         return (bool)$date;
     }
-
-
 }

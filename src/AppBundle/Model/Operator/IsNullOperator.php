@@ -2,16 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: silvio
- * Date: 13.12.2016.
- * Time: 23:18
+ * Date: 02.01.2017.
+ * Time: 21:36
  */
 
 namespace AppBundle\Model\Operator;
 
-class InOperator extends Operator
+class IsNullOperator extends Operator
 {
+
     public function __construct()
     {
-        parent::__construct('in', true, 1);
+        parent::__construct('is_null', false, 1);
     }
 }

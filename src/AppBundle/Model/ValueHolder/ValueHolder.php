@@ -8,7 +8,7 @@
 
 namespace AppBundle\Model\ValueHolder;
 
-use AppBundle\Model\Filter;
+use AppBundle\Model\Filter\Filter;
 use AppBundle\Model\Operator\Operator;
 
 class ValueHolder implements IValueHolder

@@ -24,7 +24,7 @@ final class JsonHelper
 
     private $result;
 
-    private function __construct(\stdClass $result, $status)
+    private function __construct($result, $status)
     {
         $this->status = $status;
         $this->result = $result;
@@ -40,14 +40,15 @@ final class JsonHelper
      *       2 - JSON was decoded successfully, but result is empty
      * </pre>
      *
-     * @param $jsonString
+     * @param      $jsonString
+     * @param bool $asArray When TRUE, returned objects will be converted into associative arrays.
      *
      * @return JsonHelper
      */
-    public static function decode($jsonString)
+    public static function decode($jsonString, $asArray = false)
     {
         $status      = self::SUCCESS;
-        $decodedJson = json_decode($jsonString);
+        $decodedJson = json_decode($jsonString, $asArray);
 
         if ($decodedJson === null) {
             if (json_last_error() !== JSON_ERROR_NONE) {

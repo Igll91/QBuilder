@@ -35,4 +35,9 @@ abstract class OperatorValueHolder implements IValueHolder
     {
         $this->valueHolders[] = $valueHolder;
     }
+
+    public function addAllValueHolders(array $valueHolders)
+    {
+        array_walk($valueHolders, array($this, 'addValueHolder'));
+    }
 }

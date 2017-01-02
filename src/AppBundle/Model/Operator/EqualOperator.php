@@ -8,13 +8,11 @@
 
 namespace AppBundle\Model\Operator;
 
-
 class EqualOperator extends Operator
 {
 
-    public function __construct($type, $multiple, $numberOfInputs)
+    public function __construct()
     {
-        parent::__construct("equal", FALSE, 1);
+        parent::__construct("equal", false, 1);
     }
-
 }
