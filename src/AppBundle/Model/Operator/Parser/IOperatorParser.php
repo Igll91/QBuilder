@@ -13,11 +13,11 @@ use AppBundle\Model\Operator\Operator;
 interface IOperatorParser
 {
     /**
-     * Parses given string into corresponding Operator.
+     * Parses given value into corresponding Operator.
      *
-     * @param $value string String representing Operator.
+     * @param $value mixed Value that represents Operator.
      *
      * @return Operator|null Corresponding Operator if found , else null.
      */
-    public static function parse($value);
+    public function parse($value);
 }

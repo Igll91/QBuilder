@@ -40,11 +40,16 @@ abstract class Operator
      */
     private $optgroup;
 
-    function __construct($type, $multiple, $numberOfInputs)
+    public function __construct($type, $multiple, $numberOfInputs)
     {
         $this->type           = $type;
         $this->multiple       = $multiple;
         $this->numberOfInputs = $numberOfInputs;
+    }
+
+    public function __toString()
+    {
+        return $this->type;
     }
 
 //======================================================================================================================

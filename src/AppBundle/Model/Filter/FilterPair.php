@@ -30,6 +30,15 @@ class FilterPair
         $this->operators = array();
     }
 
+    public function hasOperator(Operator $operator)
+    {
+        return in_array($operator, $this->operators);
+    }
+
+//======================================================================================================================
+// INSERTION
+//======================================================================================================================
+
     public function addOperator(Operator $operator)
     {
         if (array_key_exists($operator->getType(), $this->operators)) {
@@ -39,9 +48,9 @@ class FilterPair
         $this->operators[] = $operator;
     }
 
-    public function hasOperator(Operator $operator)
+    public function addOperators(array $operators)
     {
-        return in_array($operator, $this->operators);
+        array_walk($operators, array($this, 'addOperator'));
     }
 
 //======================================================================================================================

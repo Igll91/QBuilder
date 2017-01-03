@@ -10,15 +10,21 @@ namespace AppBundle\Model\Parser;
 
 use AppBundle\Helper\JsonHelper;
 use AppBundle\Helper\ValueChecker;
-use AppBundle\Model\Filter\FilterPair;
-use AppBundle\Model\Operator\EqualOperator;
-use AppBundle\Model\Operator\IsNullOperator;
-use AppBundle\Model\Operator\Operator;
+use AppBundle\Model\Filter\FilterPairHolder;
+use AppBundle\Model\Operator\Parser\OperatorParserFactory;
 use AppBundle\Model\Parser\ValueHolder\MongoDbOperatorValueParser;
 use AppBundle\Model\ValueHolder\OperatorValueHolder;
 
 class MongoDbParser extends Parser
 {
+
+    private $operatorParser;
+
+    public function __construct(FilterPairHolder $filterPairHolder)
+    {
+        parent::__construct($filterPairHolder);
+        $this->operatorParser = OperatorParserFactory::getParser(OperatorParserFactory::MONGODB_PARSER);
+    }
 
     public function parseQuery($query)
     {
@@ -88,45 +94,16 @@ class MongoDbParser extends Parser
                 } else {
                     $filterPair = $this->filterPairHolder->getByFilterId($cQueryKey);
                     ValueChecker::throwExIfNull($filterPair);
-                    $operator = $this->getOperator($cQueryVal);
-                    //TODO: operator must not be null and must be in filterPair list of operators
+                    $operator = $this->operatorParser->parse($cQueryVal);
+
+                    if (!$filterPair->hasOperator($operator)) {
+                        throw new \InvalidArgumentException("Operator '${operator}' not found among filter allowed operators.");
+                    }
+
                     // TODO: validate value with filter type !
                     // TODO: validate value with filter validators !
                 }
             }
         }
-    }
-
-    /**
-     * TODO: documentation with examples
-     *
-     * @param $value
-     *
-     * @return Operator|null
-     */
-    private function getOperator($value)
-    {
-        // RETHINK THIS PART AGAIN...
-
-        if (is_array($value)) {
-            //TODO: handle operator
-            $operatorSize = count($value);
-            if ($operatorSize === 1) {
-
-            } else {
-
-            }
-        } else {
-            switch (true) {
-                case $value === null:
-                    return new IsNullOperator();
-                    break;
-                default:
-                    return new EqualOperator();
-                    break;
-            }
-        }
-
-        return null;
     }
 }
