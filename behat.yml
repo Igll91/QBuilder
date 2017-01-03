@@ -2,16 +2,19 @@ default:
     suites:
         validation_min_features:
           paths: ["%paths.base%/features/validation/min"]
-          contexts: ["MinValidatorContext"]
+          contexts: ["Svuk\\Tests\\Model\\Validator\\MinValidatorContext"]
         validation_max_features:
           paths: ["%paths.base%/features/validation/max"]
-          contexts: ["MaxValidatorContext"]
+          contexts: ["Svuk\\Tests\\Model\\Validator\\MaxValidatorContext"]
         helper_features:
           paths: ["%paths.base%/features/helper"]
-          contexts: ["ValueCheckerContext"]
+          contexts: ["Svuk\\Tests\\Helper\\ValueCheckerContext"]
         filtertype_features:
           paths: ["%paths.base%/features/model/filter/type"]
-          contexts: ["FilterTypeContext"]
+          contexts: ["Svuk\\Tests\\Model\\Filter\\FilterTypeContext"]
+        operator_features:
+          paths: ["%paths.base%/features/model/operator"]
+          contexts: ["Svuk\\Tests\\Model\\Operator\\MongoDbOperatorParserRegexContext"]
 
     extensions:
         Behat\Symfony2Extension: ~

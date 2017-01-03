@@ -35,5 +35,5 @@ Feature: MaxTimeValidator
 
   Scenario: Passed invalid validation parameter
     Given that maximal allowed value for "MaxTimeValidator" is "22:00:00"
-    When I try to validate value 'c'
+    When I try to validate value "c"
     Then I should get error "InvalidArgumentException"

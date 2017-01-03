@@ -1,8 +1,6 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Behat\Context\Context;
-use AppBundle\Model\Validator\Validator;
+namespace Svuk\Tests\Model\Validator;
 
 /**
  * Created by PhpStorm.
@@ -10,7 +8,7 @@ use AppBundle\Model\Validator\Validator;
  * Date: 08.12.2016.
  * Time: 20:39
  */
-class MinValidatorContext extends MaxValidatorContext
+class MinValidatorContext extends ValidatorContext
 {
 
     /**

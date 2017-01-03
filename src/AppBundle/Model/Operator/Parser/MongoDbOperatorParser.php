@@ -126,7 +126,6 @@ class MongoDbOperatorParser implements IOperatorParser
      *
      * @return null
      *
-     * TODO: http://stackoverflow.com/questions/249664/best-practices-to-test-protected-methods-with-phpunit
      */
     private function getRegexOperator($value)
     {
@@ -140,19 +139,19 @@ class MongoDbOperatorParser implements IOperatorParser
         // "$regex": "^((?!asd).)*$"    - doesn't contain (note - second parameter: "$options": "s")
 
         switch (true) {
-            case preg_match('^\(\?\<\![[:print:]]*\)\$$', $value):
+            case preg_match('/^\(\?\<\![[:print:]]*\)\$$/', $value):
                 $operator = new NotEndsWithOperator();
                 break;
-            case preg_match('^\^\(\?\!([[:print:]]|\p{L})*\)$', $value):
+            case preg_match('/^\^\(\?\!([[:print:]]|\p{L})*\)$/', $value):
                 $operator = new NotBeginsWithOperator();
                 break;
-            case preg_match('^\^\(\(\?\!([[:print:]]|\p{L})*\)\.\)\*\$$', $value):
+            case preg_match('/^\^\(\(\?\!([[:print:]]|\p{L})*\)\.\)\*\$$/', $value):
                 $operator = new NotContainsOperator();
                 break;
-            case preg_match('^([[:print:]]|\p{L})*\$$', $value):
+            case preg_match('/^([[:print:]]|\p{L})*\$$/', $value):
                 $operator = new EndsWithOperator();
                 break;
-            case preg_match('^\^([[:print:]]|\p{L})*$', $value):
+            case preg_match('/^\^([[:print:]]|\p{L})*$/', $value):
                 $operator = new BeginsWithOperator();
                 break;
             default:

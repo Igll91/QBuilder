@@ -1,5 +1,7 @@
 <?php
 
+namespace Svuk\Tests\Model\Validator;
+
 /**
  * Created by PhpStorm.
  * User: silvio
@@ -32,5 +34,4 @@ class MaxValidatorContext extends ValidatorContext
     {
         $this->createValidator($arg1, array(new $arg3($arg2)));
     }
-
 }

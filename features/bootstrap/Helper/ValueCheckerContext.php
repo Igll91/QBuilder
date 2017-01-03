@@ -1,6 +1,8 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
+namespace Svuk\Tests\Helper;
+
+use AppBundle\Helper\ValueChecker;
 use Behat\Behat\Context\Context;
 
 /**
@@ -19,10 +21,10 @@ class ValueCheckerContext implements Context
 
     private function getVal($value)
     {
-        $f = $this->functionToUse;
+        $function = $this->functionToUse;
 
         try {
-            $this->value = \AppBundle\Helper\ValueChecker::$f($value);
+            $this->value = ValueChecker::$function($value);
         } catch (\InvalidArgumentException $ex) {
             $this->error = $ex;
         }
@@ -57,7 +59,7 @@ class ValueCheckerContext implements Context
      */
     public function iShouldGet($arg1)
     {
-        PHPUnit_Framework_Assert::assertEquals($this->value, $arg1);
+        \PHPUnit_Framework_Assert::assertEquals($this->value, $arg1);
     }
 
     /**
@@ -65,7 +67,7 @@ class ValueCheckerContext implements Context
      */
     public function iShouldGetError($arg1)
     {
-        PHPUnit_Framework_Assert::assertEquals($arg1, get_class($this->error));
+        \PHPUnit_Framework_Assert::assertEquals($arg1, get_class($this->error));
     }
 
     /**
@@ -73,6 +75,6 @@ class ValueCheckerContext implements Context
      */
     public function iShouldGetValidDatetimeObject()
     {
-        PHPUnit_Framework_Assert::assertEquals("DateTime", get_class($this->value));
+        \PHPUnit_Framework_Assert::assertEquals("DateTime", get_class($this->value));
     }
 }

@@ -1,16 +1,21 @@
 <?php
 
+namespace Svuk\Tests\Model\Filter;
+
+use AppBundle\Model\Filter\Type\FilterType;
+use Behat\Behat\Context\Context;
+
 /**
  * Created by PhpStorm.
  * User: silvio
  * Date: 14.12.2016.
  * Time: 21:11
  */
-class FilterTypeContext implements \Behat\Behat\Context\Context
+class FilterTypeContext implements Context
 {
 
     /**
-     * @var \AppBundle\Model\Filter\FilterType
+     * @var FilterType
      */
     private $filterType;
 
@@ -28,7 +33,7 @@ class FilterTypeContext implements \Behat\Behat\Context\Context
 
     public function __construct()
     {
-        $reflectionClass = new ReflectionClass(\AppBundle\Model\Filter\FilterType::class);
+        $reflectionClass = new \ReflectionClass(FilterType::class);
         $this->namespace = $reflectionClass->getNamespaceName() . '\\';
     }
 
@@ -37,7 +42,7 @@ class FilterTypeContext implements \Behat\Behat\Context\Context
      */
     public function thatWeUse($arg1)
     {
-        $reflector        = new ReflectionClass($this->namespace . $arg1);
+        $reflector        = new \ReflectionClass($this->namespace . $arg1);
         $this->filterType = $reflector->newInstanceArgs();
     }
 
@@ -54,7 +59,7 @@ class FilterTypeContext implements \Behat\Behat\Context\Context
      */
     public function iTryToValidateBooleanValue()
     {
-        $this->result = $this->filterType->validateValue(TRUE);
+        $this->result = $this->filterType->validateValue(true);
     }
 
     /**
@@ -70,7 +75,6 @@ class FilterTypeContext implements \Behat\Behat\Context\Context
      */
     public function iShouldGet($arg1)
     {
-        PHPUnit_Framework_Assert::assertEquals(filter_var($arg1, FILTER_VALIDATE_BOOLEAN), $this->result);
+        \PHPUnit_Framework_Assert::assertEquals(filter_var($arg1, FILTER_VALIDATE_BOOLEAN), $this->result);
     }
-
 }
