@@ -15,6 +15,16 @@ use AppBundle\Model\Operator\Parser\OperatorParserFactory;
 use AppBundle\Model\Parser\ValueHolder\MongoDbOperatorValueParser;
 use AppBundle\Model\ValueHolder\OperatorValueHolder;
 
+/**
+ * This parser is deprecated.
+ *
+ * Deprecated, because the way operators are parsed is not 100% reliable.
+ *
+ * Class MongoDbParser
+ * @package AppBundle\Model\Parser
+ *
+ * @deprecated
+ */
 class MongoDbParser extends Parser
 {
 

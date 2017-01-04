@@ -12,6 +12,12 @@ use AppBundle\Helper\ValueChecker;
 use AppBundle\Model\ValueHolder\AndValueHolder;
 use AppBundle\Model\ValueHolder\OrValueHolder;
 
+/**
+ * Class MongoDbOperatorValueParser
+ * @package AppBundle\Model\Parser\ValueHolder
+ *
+ * @deprecated
+ */
 class MongoDbOperatorValueParser implements IOperatorValueParser
 {
     public static function parse($val)

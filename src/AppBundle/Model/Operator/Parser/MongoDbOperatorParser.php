@@ -31,6 +31,12 @@ use AppBundle\Model\Operator\NotEqualOperator;
 use AppBundle\Model\Operator\NotInOperator;
 use AppBundle\Model\Operator\Operator;
 
+/**
+ * Class MongoDbOperatorParser
+ * @package AppBundle\Model\Operator\Parser
+ *
+ * @deprecated
+ */
 class MongoDbOperatorParser implements IOperatorParser
 {
     /**
@@ -131,6 +137,11 @@ class MongoDbOperatorParser implements IOperatorParser
     {
         $operator = null;
 
+        /*
+         * NOTE: not satisfied with the way regex value can trick operator
+         * example: contains operator with value -> 'asd$' is parsed as EndsWithOperator
+         */
+
         // "$regex": "^asd"             - begins with
         // "$regex": "^(?!asd)"         - doesn't begin with
         // "$regex": "asd"              - contains
@@ -139,19 +150,19 @@ class MongoDbOperatorParser implements IOperatorParser
         // "$regex": "^((?!asd).)*$"    - doesn't contain (note - second parameter: "$options": "s")
 
         switch (true) {
-            case preg_match('/^\(\?\<\![[:print:]]*\)\$$/', $value):
+            case preg_match('/^\(\?\<\![[:print:]]+\)\$$/u', $value):
                 $operator = new NotEndsWithOperator();
                 break;
-            case preg_match('/^\^\(\?\!([[:print:]]|\p{L})*\)$/', $value):
+            case preg_match('/^\^\(\?\![[:print:]]+\)$/u', $value):
                 $operator = new NotBeginsWithOperator();
                 break;
-            case preg_match('/^\^\(\(\?\!([[:print:]]|\p{L})*\)\.\)\*\$$/', $value):
+            case preg_match('/^\^\(\(\?\![[:print:]]+\)\.\)\*\$$/u', $value):
                 $operator = new NotContainsOperator();
                 break;
-            case preg_match('/^([[:print:]]|\p{L})*\$$/', $value):
+            case preg_match('/^[[:print:]]+\$$/u', $value):
                 $operator = new EndsWithOperator();
                 break;
-            case preg_match('/^\^([[:print:]]|\p{L})*$/', $value):
+            case preg_match('/^\^[[:print:]]+$/u', $value):
                 $operator = new BeginsWithOperator();
                 break;
             default:
