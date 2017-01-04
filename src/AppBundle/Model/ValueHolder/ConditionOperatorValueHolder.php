@@ -8,7 +8,7 @@
 
 namespace AppBundle\Model\ValueHolder;
 
-abstract class OperatorValueHolder implements IValueHolder
+abstract class ConditionOperatorValueHolder implements IValueHolder
 {
     /**
      * Collection of other IValueHolder implementation objects.

@@ -8,9 +8,12 @@
 
 namespace AppBundle\Model\Operator\Parser;
 
+use AppBundle\Model\ValueHolder\Parser\RuleConditionOperatorValueHolderParser;
+
 final class OperatorParserFactory
 {
     const MONGODB_PARSER = 1;
+    const RULE_PARSER    = 2;
 
     private function __construct()
     {
@@ -20,7 +23,10 @@ final class OperatorParserFactory
     {
         switch ($parserType) {
             case self::MONGODB_PARSER:
-                return new MongoDbOperatorParser();
+//                return new MongoDbConditionOperatorValueHolderParser();
+                throw new \InvalidArgumentException('Deprecated. Do not use.');
+            case self::RULE_PARSER:
+                return new RuleConditionOperatorValueHolderParser();
             default:
                 throw new \InvalidArgumentException('Unsupported parser type');
         }

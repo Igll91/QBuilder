@@ -1,6 +1,7 @@
 <?php namespace AppBundle\Model\Filter;
 
 use AppBundle\Model\Filter\Type\FilterType;
+use AppBundle\Model\Validator\Validator;
 
 /**
  * Represents querybuilder Filter object.
@@ -55,21 +56,45 @@ class Filter
      */
     private $defaultValue;
 
+    /**
+     * Array of validators that are applicable to this filter.
+     *
+     * @var array
+     */
+    private $validators;
+
     public function __construct($identifier, FilterType $type)
     {
         // Required values for successful build
         $this->identifier = $identifier;
         $this->type       = $type;
+        $this->validators = array();
     }
 
-//  #####################################
-//                                      #
-//          GETTERS AND SETTERS         #
-//                                      #
-//  #####################################
+//======================================================================================================================
+// INSERTION
+//======================================================================================================================
+
+    public function addValidator(Validator $validator)
+    {
+        if (in_array($validator, $this->validators, true)) {
+            throw new \InvalidArgumentException("Validator ${validator} already inserted!");
+        }
+
+        $this->validators[] = $validator;
+    }
+
+    public function addValidators(array $validators)
+    {
+        array_walk($validators, array($this, 'addValidator'));
+    }
+
+//======================================================================================================================
+// GETTERS & SETTERS
+//======================================================================================================================
 
     /**
-     * @return string
+     * @return FilterType
      */
     public function getType()
     {
@@ -142,5 +167,13 @@ class Filter
         $this->defaultValue = $defaultValue;
 
         return $this;
+    }
+
+    /**
+     * @return Validator[]
+     */
+    public function getValidators()
+    {
+        return $this->validators;
     }
 }

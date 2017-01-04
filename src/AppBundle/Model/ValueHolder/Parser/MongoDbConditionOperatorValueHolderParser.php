@@ -6,11 +6,11 @@
  * Time: 11:19
  */
 
-namespace AppBundle\Model\Parser\ValueHolder;
+namespace AppBundle\Model\ValueHolder\Parser;
 
 use AppBundle\Helper\ValueChecker;
-use AppBundle\Model\ValueHolder\AndValueHolder;
-use AppBundle\Model\ValueHolder\OrValueHolder;
+use AppBundle\Model\ValueHolder\AndConditionValueHolder;
+use AppBundle\Model\ValueHolder\OrConditionValueHolder;
 
 /**
  * Class MongoDbOperatorValueParser
@@ -18,7 +18,7 @@ use AppBundle\Model\ValueHolder\OrValueHolder;
  *
  * @deprecated
  */
-class MongoDbOperatorValueParser implements IOperatorValueParser
+class MongoDbConditionOperatorValueHolderParser implements IConditionOperatorValueHolderParser
 {
     public static function parse($val)
     {
@@ -27,10 +27,10 @@ class MongoDbOperatorValueParser implements IOperatorValueParser
 
         switch ($stringVal) {
             case '$and':
-                $operator = new AndValueHolder();
+                $operator = new AndConditionValueHolder();
                 break;
             case '$or':
-                $operator = new OrValueHolder();
+                $operator = new OrConditionValueHolder();
                 break;
         }
 

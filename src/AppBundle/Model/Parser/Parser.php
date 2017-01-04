@@ -8,7 +8,12 @@
 
 namespace AppBundle\Model\Parser;
 
+use AppBundle\Model\Filter\Filter;
 use AppBundle\Model\Filter\FilterPairHolder;
+use AppBundle\Model\Filter\Type\FilterType;
+use AppBundle\Model\Operator\IsNotNullOperator;
+use AppBundle\Model\Operator\IsNullOperator;
+use AppBundle\Model\Operator\Operator;
 use AppBundle\Model\ValueHolder\IValueHolder;
 
 abstract class Parser
@@ -33,4 +38,31 @@ abstract class Parser
      * @return IValueHolder Value holder.
      */
     abstract public function parseQuery($query);
+
+
+    protected function validateValue(Filter $filter, Operator $operator, $value)
+    {
+        $operatorClass = get_class($operator);
+
+        if ($operatorClass !== IsNullOperator::class && $operatorClass !== IsNotNullOperator::class) {
+            $this->validateValueByFilterType($filter->getType(), $value);
+            $this->validateValueByValidators($filter, $value);
+        }
+    }
+
+    protected function validateValueByFilterType(FilterType $filterType, $value)
+    {
+        if (!$filterType->validateValue($value)) {
+            throw new \InvalidArgumentException("FilterType [${filterType}] validation failed for value ${value}."); //Custom exception?
+        }
+    }
+
+    protected function validateValueByValidators(Filter $filter, $value)
+    {
+        foreach ($filter->getValidators() as $validator) {
+            if (!$validator->validate($value)) {
+                throw new \InvalidArgumentException(); //Custom exception?
+            }
+        }
+    }
 }

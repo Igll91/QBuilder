@@ -8,8 +8,6 @@
 
 namespace AppBundle\Model\ValueHolder;
 
-
-class OrValueHolder extends OperatorValueHolder
+class OrConditionValueHolder extends ConditionOperatorValueHolder
 {
-
 }

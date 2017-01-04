@@ -8,6 +8,6 @@
 
 namespace AppBundle\Model\ValueHolder;
 
-class AndValueHolder extends OperatorValueHolder
+class AndConditionValueHolder extends ConditionOperatorValueHolder
 {
 }

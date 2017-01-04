@@ -12,8 +12,7 @@ use AppBundle\Helper\JsonHelper;
 use AppBundle\Helper\ValueChecker;
 use AppBundle\Model\Filter\FilterPairHolder;
 use AppBundle\Model\Operator\Parser\OperatorParserFactory;
-use AppBundle\Model\Parser\ValueHolder\MongoDbOperatorValueParser;
-use AppBundle\Model\ValueHolder\OperatorValueHolder;
+use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
 
 /**
  * This parser is deprecated.
@@ -61,7 +60,7 @@ class MongoDbParser extends Parser
      * @param array $mongoDbQuery
      * @param  int  $iterationLevel Query nesting level.
      *
-     * @return OperatorValueHolder Main level OperatorValueHolder.
+     * @return ConditionOperatorValueHolder Main level OperatorValueHolder.
      */
     private function getValues(array $mongoDbQuery, $iterationLevel)
     {
@@ -72,7 +71,7 @@ class MongoDbParser extends Parser
 
             // TODO: get only key and val of first element (remove foreach)
             foreach ($mongoDbQuery as $key => $value) {
-                $operatorValueHolder = MongoDbOperatorValueParser::parse($key);
+                $operatorValueHolder = MongoDbConditionOperatorValueHolderParser::parse($key);
 
                 if (is_array($value) && $operatorValueHolder && (count($value) > 0)) {
                     $this->getValues($value, $iterationLevel + 1); //TODO: delete
@@ -93,7 +92,7 @@ class MongoDbParser extends Parser
 
                 $cQueryKey           = array_keys($cQuery)[0];
                 $cQueryVal           = array_values($cQuery)[0];
-                $operatorValueHolder = MongoDbOperatorValueParser::parse($cQueryKey);
+                $operatorValueHolder = MongoDbConditionOperatorValueHolderParser::parse($cQueryKey);
 
                 dump('key: ' . $cQueryKey . ' at level ' . $iterationLevel);
                 dump($cQueryVal);

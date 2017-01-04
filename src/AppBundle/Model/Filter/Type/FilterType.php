@@ -22,6 +22,11 @@ abstract class FilterType
         $this->identifier = $identifier;
     }
 
+    public function __toString()
+    {
+        return $this->identifier;
+    }
+
     /**
      * Value if passed value matches required type.
      *

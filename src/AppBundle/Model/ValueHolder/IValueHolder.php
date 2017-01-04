@@ -10,6 +10,5 @@ namespace AppBundle\Model\ValueHolder;
 
 interface IValueHolder
 {
-
     public function getValue();
 }

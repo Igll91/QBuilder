@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\Validator;
 
-
 abstract class MaxValidator extends Validator
 {
     /**
@@ -26,9 +25,8 @@ abstract class MaxValidator extends Validator
 
     public function __construct($maxValue)
     {
-        parent::__construct(TRUE);
+        parent::__construct(true);
         $this->name     = "max";
         $this->maxValue = $maxValue;
     }
-
 }
