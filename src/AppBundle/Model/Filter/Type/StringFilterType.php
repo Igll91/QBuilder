@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\Filter\Type;
 
-
 use AppBundle\Helper\ValueChecker;
 
 class StringFilterType extends FilterType
@@ -23,10 +22,9 @@ class StringFilterType extends FilterType
         try {
             ValueChecker::getStringOrEx($value);
 
-            return TRUE;
+            return true;
         } catch (\InvalidArgumentException $ex) {
-            return FALSE;
+            return false;
         }
     }
-
 }

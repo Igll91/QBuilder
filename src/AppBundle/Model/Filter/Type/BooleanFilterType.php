@@ -8,15 +8,17 @@
 
 namespace AppBundle\Model\Filter\Type;
 
-
 class BooleanFilterType extends FilterType
 {
-    public function __construct() { parent::__construct('boolean'); }
+    public function __construct()
+    {
+        parent::__construct('boolean');
+    }
 
     public function validateValue($value)
     {
-        return is_bool($value);
+        $string = strtolower((string)$value);
+
+        return (in_array($string, array("true", "false", "1", "0", "yes", "no"), true));
     }
-
-
 }

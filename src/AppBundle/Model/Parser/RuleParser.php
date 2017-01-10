@@ -66,7 +66,7 @@ class RuleParser extends Parser
                 $valueHolders[] = $this->parseConditionOperator($item, $iterationLevel + 1);
             } else {
                 $filterPair = $this->filterPairHolder->getByFilterId($item->id);
-                ValueChecker::throwExIfNull($filterPair);
+                ValueChecker::throwExIfNull($filterPair, 'FilterPair must not be null.');
 
                 $operator = $filterPair->findOperatorByType($item->operator);
                 ValueChecker::throwExIfNull($operator);
@@ -88,13 +88,15 @@ class RuleParser extends Parser
                             $this->validateValue($filterPair->getFilter(), $operator, $currentValue);
                         }
 
-                        $valueHolders[] = new ValueHolder($filterPair->getFilter(), $operator, $value);
+                        $castedValues   = $this->matchValueToFilterType($value, $filterPair->getFilter()->getType());
+                        $valueHolders[] = new ValueHolder($filterPair->getFilter(), $operator, $castedValues);
                     } else {
                         throw new \InvalidArgumentException("Operator ${operator} does not support multiple values.");
                     }
                 } else {
                     $this->validateValue($filterPair->getFilter(), $operator, $value);
-                    $valueHolders[] = new ValueHolder($filterPair->getFilter(), $operator, $value);
+                    $castedValue    = $this->matchValueToFilterType($value, $filterPair->getFilter()->getType());
+                    $valueHolders[] = new ValueHolder($filterPair->getFilter(), $operator, $castedValue);
                 }
             }
         }

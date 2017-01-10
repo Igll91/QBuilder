@@ -29,6 +29,41 @@ Feature: FilterTypeFeature
     When I try to validate non boolean value
     Then I should get "false"
 
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "true"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "false"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "1"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "0"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "yes"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "no"
+    Then I should get "true"
+
+  Scenario: Validating BooleanFilterType
+    Given that we use "BooleanFilterType"
+    When I try to validate value "true it is"
+    Then I should get "false"
+
   Scenario: Validating StringFilterType
     Given that we use "StringFilterType"
     When I try to validate boolean value

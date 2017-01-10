@@ -10,7 +10,11 @@ namespace AppBundle\Model\Parser;
 
 use AppBundle\Model\Filter\Filter;
 use AppBundle\Model\Filter\FilterPairHolder;
+use AppBundle\Model\Filter\Type\BooleanFilterType;
+use AppBundle\Model\Filter\Type\DoubleFilterType;
 use AppBundle\Model\Filter\Type\FilterType;
+use AppBundle\Model\Filter\Type\IntegerFilterType;
+use AppBundle\Model\Filter\Type\StringFilterType;
 use AppBundle\Model\Operator\IsNotNullOperator;
 use AppBundle\Model\Operator\IsNullOperator;
 use AppBundle\Model\Operator\Operator;
@@ -39,7 +43,6 @@ abstract class Parser
      */
     abstract public function parseQuery($query);
 
-
     protected function validateValue(Filter $filter, Operator $operator, $value)
     {
         $operatorClass = get_class($operator);
@@ -63,6 +66,30 @@ abstract class Parser
             if (!$validator->validate($value)) {
                 throw new \InvalidArgumentException(); //Custom exception?
             }
+        }
+    }
+
+    protected function matchValueToFilterType($value, FilterType $filterType)
+    {
+        $cast = function ($val) use ($filterType) {
+            switch (get_class($filterType)) {
+                case DoubleFilterType::class:
+                    return (double)$val;
+                case IntegerFilterType::class:
+                    return (int)$val;
+                case StringFilterType::class:
+                    return (string)$val;
+                case BooleanFilterType::class:
+                    return (in_array($val, array("true", "1", "yes"), true));
+                default:
+                    throw new \InvalidArgumentException("Unsupported filter type ${filterType}.");
+            }
+        };
+
+        if (is_array($value)) {
+            return array_map($cast, $value);
+        } else {
+            return $cast($value);
         }
     }
 }
