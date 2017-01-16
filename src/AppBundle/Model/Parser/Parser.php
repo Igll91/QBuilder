@@ -8,6 +8,7 @@
 
 namespace AppBundle\Model\Parser;
 
+use AppBundle\Model\Exception\ValidationException;
 use AppBundle\Model\Filter\Filter;
 use AppBundle\Model\Filter\FilterPairHolder;
 use AppBundle\Model\Filter\Type\BooleanFilterType;
@@ -87,13 +88,13 @@ abstract class Parser
      * @param Filter $filter Filter whose validators will be used if any.
      * @param mixed  $value  Value to be validated.
      *
-     * @throws \InvalidArgumentException If value is not positively validated by Validator.
+     * @throws ValidationException If value is not positively validated by Validator.
      */
     private function validateValueByValidators(Filter $filter, $value)
     {
         foreach ($filter->getValidators() as $validator) {
             if (!$validator->validate($value)) {
-                throw new \InvalidArgumentException("Validation for value ${value} failed at ${validator}"); //Custom exception?
+                throw new ValidationException("Validation for value ${value} failed at ${validator}");
             }
         }
     }

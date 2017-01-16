@@ -10,6 +10,7 @@ namespace AppBundle\Model\Parser;
 
 use AppBundle\Helper\JsonHelper;
 use AppBundle\Helper\ValueChecker;
+use AppBundle\Model\Exception\ValidationException;
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
 use AppBundle\Model\ValueHolder\Parser\RuleConditionOperatorValueHolderParser;
 use AppBundle\Model\ValueHolder\ValueHolder;
@@ -65,7 +66,9 @@ class RuleParser extends Parser
      * @param array $rules          Rules defined and passed by frontend QueryBuilder client.
      * @param int   $iterationLevel Current level of iteration.
      *
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If Exception occurred that should not be handled any further and no
+     * details should be shown to user.
+     * @throws ValidationException If validation was invalid.
      *
      * @return array[IValueHolder] Array of IValueHolder instances.
      */
@@ -74,7 +77,7 @@ class RuleParser extends Parser
         $valueHolders = array();
 
         if (empty($rules)) {
-            throw new \InvalidArgumentException('');
+            throw new \InvalidArgumentException('Rules should not be empty.');
         }
 
         foreach ($rules as $item) {
@@ -97,7 +100,8 @@ class RuleParser extends Parser
 
                     if ($operator->isMultiple() || $inputSize > 1) {
                         if ($inputSize > 1 && ($valueCount !== $inputSize)) {
-                            throw new \InvalidArgumentException("Size of values array(${valueCount}) does not match number of operator inputs ${inputSize}.");
+                            throw new \InvalidArgumentException("Size of values array(${valueCount}) does not 
+                            match number of operator inputs ${inputSize}.");
                         }
 
                         foreach ($value as $currentValue) {
