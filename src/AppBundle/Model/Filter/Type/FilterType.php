@@ -28,7 +28,7 @@ abstract class FilterType
     }
 
     /**
-     * Value if passed value matches required type.
+     * Checks if passed value matches required type.
      *
      * @return boolean True if valid, false otherwise.
      */

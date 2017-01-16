@@ -116,8 +116,10 @@ class DefaultController extends Controller
             OperatorAggregator::FULL_SIZE));
         $fph->addAllFilterPairs(array($fp1, $fp2, $fp3, $fp4));
         $parser = new RuleParser($fph);
-        $parser->parseQuery($json);
+        $result = $parser->parseQuery($json);
 
+        dump($result);
+        die();
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir') . '/..') . DIRECTORY_SEPARATOR,

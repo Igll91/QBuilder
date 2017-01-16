@@ -21,23 +21,25 @@ class RuleParser extends Parser
         $query = ValueChecker::getStringOrEx($query);
         $json  = JsonHelper::decode($query);
 
-        dump($json);
+        dump($json); //TODO: REMOVE
 
-        $asd = $this->parseConditionOperator($json->getResult(), 0);
-
-        dump($asd);
-        die();
+        return $this->parseConditionOperator($json->getResult(), 0);
     }
 
     /**
      * Parses rules that are part of current iteration ConditionOperatorValueHolder.
      *
-     * TODO: explanation
+     * Parse current condition rule and append other rules into his holder.
+     * It represents SQL condition.
+     * Example:
+     *      (name = 'x' OR name = 'y') will be presented as OrConditionValueHolder containing two ValueHolder objects.
+     *
+     * Holders can be nested.
      *
      * @param \stdClass $rule           Current set of rules that will be parsed.
      * @param  int      $iterationLevel Nesting level.
      *
-     * @return ConditionOperatorValueHolder Main level ConditionOperatorValueHolder.
+     * @return ConditionOperatorValueHolder ConditionOperatorValueHolder containing other rule values.
      */
     private function parseConditionOperator($rule, $iterationLevel)
     {
@@ -50,8 +52,22 @@ class RuleParser extends Parser
     }
 
     /**
-     * @param array $rules
-     * @param       $iterationLevel
+     * Iterates rules and parses them into IValueHolder instances.
+     *
+     * Iterates over passed rules (frontend QueryBuilder client values) and tries to parse them.
+     * If any of values contains condition, another level of iteration will be added to the values holder.
+     * Other values will be checked:
+     *  - if Filter is among allowed ones
+     *  - if Operator is among allowed ones
+     *  - rule value/s will be checked with Filter and FilterType validator/s
+     *  - rule value/s will be cast to corresponding type
+     *
+     * @param array $rules          Rules defined and passed by frontend QueryBuilder client.
+     * @param int   $iterationLevel Current level of iteration.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return array[IValueHolder] Array of IValueHolder instances.
      */
     private function parseRules(array $rules, $iterationLevel)
     {
@@ -69,7 +85,7 @@ class RuleParser extends Parser
                 ValueChecker::throwExIfNull($filterPair, 'FilterPair must not be null.');
 
                 $operator = $filterPair->findOperatorByType($item->operator);
-                ValueChecker::throwExIfNull($operator);
+                ValueChecker::throwExIfNull($operator, 'Operator must not be null.');
 
                 $value = $item->value;
 
