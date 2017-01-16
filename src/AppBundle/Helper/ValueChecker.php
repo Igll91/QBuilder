@@ -10,8 +10,9 @@ namespace AppBundle\Helper;
 
 final class ValueChecker
 {
-
-    private function __construct() { }
+    private function __construct()
+    {
+    }
 
     /**
      * Checks whether passed value is numeric.

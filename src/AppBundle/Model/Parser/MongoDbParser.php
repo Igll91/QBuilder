@@ -20,7 +20,7 @@ use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
  * Deprecated, because the way operators are parsed is not 100% reliable.
  *
  * Class MongoDbParser
- * @package AppBundle\Model\Parser
+ * @package AppBundle\Model\parser
  *
  * @deprecated
  */

@@ -15,6 +15,9 @@ default:
         operator_features:
           paths: ["%paths.base%/features/model/operator"]
           contexts: ["Svuk\\Tests\\Model\\Operator\\MongoDbOperatorParserRegexContext"]
+        value_holder_features:
+          paths: ["%paths.base%/features/model/value_holder/parser"]
+          contexts: ["Svuk\\Tests\\Model\\ValueHolder\\Parser\\ConditionOperatorValueHolderParserContext"]
 
     extensions:
         Behat\Symfony2Extension: ~

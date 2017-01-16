@@ -33,7 +33,7 @@ use AppBundle\Model\Operator\Operator;
 
 /**
  * Class MongoDbOperatorParser
- * @package AppBundle\Model\Operator\Parser
+ * @package AppBundle\Model\Operator\parser
  *
  * @deprecated
  */

@@ -14,7 +14,7 @@ use AppBundle\Model\ValueHolder\OrConditionValueHolder;
 
 /**
  * Class MongoDbOperatorValueParser
- * @package AppBundle\Model\Parser\ValueHolder
+ * @package AppBundle\Model\parser\value_holder
  *
  * @deprecated
  */

@@ -80,7 +80,9 @@ abstract class Parser
                 case StringFilterType::class:
                     return (string)$val;
                 case BooleanFilterType::class:
-                    return (in_array($val, array("true", "1", "yes"), true));
+                    $strVal = strtolower((string)$val);
+
+                    return (in_array($strVal, array("true", "1", "yes"), true));
                 default:
                     throw new \InvalidArgumentException("Unsupported filter type ${filterType}.");
             }
