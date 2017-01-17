@@ -8,7 +8,9 @@ default:
           contexts: ["Svuk\\Tests\\Model\\Validator\\MaxValidatorContext"]
         helper_features:
           paths: ["%paths.base%/features/helper"]
-          contexts: ["Svuk\\Tests\\Helper\\ValueCheckerContext"]
+          contexts:
+              - "Svuk\\Tests\\Helper\\ValueCheckerContext"
+              - "Svuk\\Tests\\Helper\\JsonHelperContext"
         filtertype_features:
           paths: ["%paths.base%/features/model/filter/type"]
           contexts: ["Svuk\\Tests\\Model\\Filter\\FilterTypeContext"]

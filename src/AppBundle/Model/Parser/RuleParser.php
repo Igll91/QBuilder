@@ -22,8 +22,6 @@ class RuleParser extends Parser
         $query = ValueChecker::getStringOrEx($query);
         $json  = JsonHelper::decode($query);
 
-        dump($json); //TODO: REMOVE
-
         return $this->parseConditionOperator($json->getResult(), 0);
     }
 
@@ -84,15 +82,12 @@ class RuleParser extends Parser
             if (property_exists($item, 'condition')) {
                 $valueHolders[] = $this->parseConditionOperator($item, $iterationLevel + 1);
             } else {
+                $value      = $item->value;
                 $filterPair = $this->filterPairHolder->getByFilterId($item->id);
+                $operator   = $filterPair->findOperatorByType($item->operator);
+
                 ValueChecker::throwExIfNull($filterPair, 'FilterPair must not be null.');
-
-                $operator = $filterPair->findOperatorByType($item->operator);
                 ValueChecker::throwExIfNull($operator, 'Operator must not be null.');
-
-                $value = $item->value;
-
-                dump($value);
 
                 if (is_array($value)) {
                     $valueCount = count($value);

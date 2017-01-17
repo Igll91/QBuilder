@@ -40,10 +40,10 @@ final class JsonHelper
      *       2 - JSON was decoded successfully, but result is empty
      * </pre>
      *
-     * @param      $jsonString
-     * @param bool $asArray When TRUE, returned objects will be converted into associative arrays.
+     * @param string $jsonString String containing data in JSON format.
+     * @param bool   $asArray    When TRUE, returned objects will be converted into associative arrays.
      *
-     * @return JsonHelper
+     * @return JsonHelper Object containing value and status.
      */
     public static function decode($jsonString, $asArray = false)
     {

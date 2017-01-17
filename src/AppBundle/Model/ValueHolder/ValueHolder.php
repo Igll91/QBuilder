@@ -47,6 +47,6 @@ class ValueHolder implements IValueHolder
 
     public function getValue()
     {
-        // TODO: Implement getValue() method.
+        return $this->value;
     }
 }
