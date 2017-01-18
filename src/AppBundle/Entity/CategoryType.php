@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Category
+ * CategoryType
  *
- * @ORM\Table(name="category")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
+ * @ORM\Table(name="category_type")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryTypeRepository")
  */
-class Category
+class CategoryType
 {
     /**
      * @var int
@@ -27,14 +27,6 @@ class Category
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
-
-    /**
-     * @var CategoryType
-     *
-     * @ORM\ManyToOne(targetEntity="CategoryType")
-     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
-     */
-    private $type;
 
 //======================================================================================================================
 // GETTERS & SETTERS
@@ -55,7 +47,7 @@ class Category
      *
      * @param string $name
      *
-     * @return Category
+     * @return CategoryType
      */
     public function setName($name)
     {
@@ -72,29 +64,5 @@ class Category
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set type
-     *
-     * @param \AppBundle\Entity\CategoryType $type
-     *
-     * @return Category
-     */
-    public function setType(\AppBundle\Entity\CategoryType $type = null)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \AppBundle\Entity\CategoryType
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

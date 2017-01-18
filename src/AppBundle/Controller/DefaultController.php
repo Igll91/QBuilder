@@ -12,6 +12,7 @@ use AppBundle\Model\Filter\Type\StringFilterType;
 use AppBundle\Model\Operator\PrebuiltAggregate\OperatorAggregator;
 use AppBundle\Model\Parser\MongoDbParser;
 use AppBundle\Model\Parser\RuleParser;
+use AppBundle\Model\RelationParser\DoctrineEntityParser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,7 +119,13 @@ class DefaultController extends Controller
         $parser = new RuleParser($fph);
         $result = $parser->parseQuery($json);
 
-        dump($result);
+
+        $entityMap = 'AppBundle:Product.AppBundle:Category';
+
+        $dep = new DoctrineEntityParser($this->getDoctrine()->getManager());
+        $map = $dep->parse($entityMap);
+
+        dump($map);
         die();
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [

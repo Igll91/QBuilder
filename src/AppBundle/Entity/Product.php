@@ -43,7 +43,7 @@ class Product
     private $inStock;
 
     /**
-     * @var int
+     * @var Category
      *
      * @ORM\ManyToOne(targetEntity="Category")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
@@ -139,7 +139,7 @@ class Product
     /**
      * Set category
      *
-     * @param integer $category
+     * @param Category $category
      *
      * @return Product
      */
@@ -153,7 +153,7 @@ class Product
     /**
      * Get category
      *
-     * @return int
+     * @return Category
      */
     public function getCategory()
     {
