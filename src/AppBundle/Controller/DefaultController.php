@@ -120,12 +120,18 @@ class DefaultController extends Controller
         $result = $parser->parseQuery($json);
 
 
-        $entityMap = 'AppBundle:Product.AppBundle:Category';
+        $entityMap  = 'AppBundle:Product.AppBundle:Category';
+        $entityMap2 = 'AppBundle:Product.AppBundle:Category.AppBundle:CategoryType';
 
         $dep = new DoctrineEntityParser($this->getDoctrine()->getManager());
         $map = $dep->parse($entityMap);
+        $map2 = $dep->parse($entityMap2);
 
         dump($map);
+        dump($map2);
+
+        dump($dep->mergeRelations(array($map, $map2)));
+
         die();
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
