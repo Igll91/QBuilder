@@ -10,9 +10,10 @@ namespace AppBundle\Model\RelationParser;
 
 use AppBundle\Helper\DoctrineEntityHelper;
 use AppBundle\Helper\ValueChecker;
+use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
 use Doctrine\ORM\EntityManager;
 
-class DoctrineEntityParser
+class DoctrineEntityParser implements IEntityParser
 {
     private $entityManager;
     private $delimiter;
@@ -23,8 +24,20 @@ class DoctrineEntityParser
         $this->delimiter     = $delimiter;
     }
 
+    public function parseTest(ConditionOperatorValueHolder $valueHolder, $rootEntity)
+    {
+        //TODO: relations should be already validated... string id must match entity field
+
+
+    }
+
     public function parse($relationsString, $entitiesMap = array())
     {
+
+        //TODO: redo... diferent structure...
+        // from conditionoperator value holder we need to pull all required joins ...
+        // alias ?
+
         $relationsString   = ValueChecker::getStringOrEx($relationsString);
         $delimiterPosition = strpos($relationsString, $this->delimiter);
 
@@ -55,8 +68,10 @@ class DoctrineEntityParser
                 if ($key === 0) {
                     if (isset($mergedRelations[0])) {
                         if ($mergedRelations[0] != $val) {
-                            throw new \InvalidArgumentException("Root element must match in all fields relation 
-                            definitions. ${val} does not match " . $mergedRelations[0]);
+                            throw new \InvalidArgumentException(
+                                "Root element must match in all fields relation 
+                            definitions. ${val} does not match ".$mergedRelations[0]
+                            );
                         } else {
                             $fieldRelationMappings[] = $key;
                         }
@@ -101,4 +116,6 @@ class DoctrineEntityParser
 
         return $entityName;
     }
+
+
 }

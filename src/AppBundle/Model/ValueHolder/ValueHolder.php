@@ -49,4 +49,20 @@ class ValueHolder implements IValueHolder
     {
         return $this->value;
     }
+
+    /**
+     * @return Filter
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    /**
+     * @return Operator
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
 }

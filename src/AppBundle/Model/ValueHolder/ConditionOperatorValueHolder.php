@@ -13,7 +13,7 @@ abstract class ConditionOperatorValueHolder implements IValueHolder
     /**
      * Collection of other IValueHolder implementation objects.
      *
-     * @var IValueHolder
+     * @var IValueHolder[]
      */
     private $valueHolders;
 
