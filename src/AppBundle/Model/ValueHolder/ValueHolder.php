@@ -41,6 +41,16 @@ class ValueHolder implements IValueHolder
         $this->value    = $value;
     }
 
+    /**
+     * Return Filter identifier;
+     *
+     * @return string
+     */
+    public function getFID()
+    {
+        return $this->filter->getIdentifier();
+    }
+
 //======================================================================================================================
 // GETTERS & SETTERS
 //======================================================================================================================

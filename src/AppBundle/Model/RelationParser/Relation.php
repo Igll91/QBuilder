@@ -12,6 +12,8 @@ use AppBundle\Helper\ValueChecker;
 
 class Relation
 {
+    const RELATION_ALIAS_DELIMITER = '_';
+
     private $identifier;
 
     private $hasParent;
@@ -32,6 +34,11 @@ class Relation
         return $this->getIdentifier();
     }
 
+    public function getFieldIdentifier()
+    {
+        return $this->identifier;
+    }
+
     public function getIdentifier()
     {
         if ($this->hasParent) {
@@ -41,11 +48,33 @@ class Relation
         }
     }
 
+    public function getAlias()
+    {
+        if ($this->hasParent) {
+            return $this->parent->getIdentifier().self::RELATION_ALIAS_DELIMITER.$this->identifier;
+        } else {
+            return $this->identifier;
+        }
+    }
+
+    public function hasParent()
+    {
+        return $this->parent !== null;
+    }
+
     public function setParent(Relation $relation)
     {
         $this->hasParent = true;
         $this->parent    = $relation;
 
         return $this;
+    }
+
+    /**
+     * @return Relation
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

@@ -20,16 +20,17 @@ class RelationHolderFactory
         $this->delimiter = $delimiter;
     }
 
+    /**
+     * Creates RelationHolder from ConditionOperatorValueHolder.
+     *
+     * @param ConditionOperatorValueHolder $holder QBuilder user selected values holder.
+     *
+     * @return RelationHolder
+     */
     public function createRelationHolder(ConditionOperatorValueHolder $holder)
     {
         $relationHolder               = new RelationHolder();
         $extractedRelationIdentifiers = $this->extractRelationFieldIdentifiers($holder);
-
-        dump($extractedRelationIdentifiers);
-
-//        TODO: sorting ??? ... can't access/create child without parent
-
-//        TODO: select doctrine ... or something ... for relation
 
         foreach ($extractedRelationIdentifiers as $relationIdentifier) {
             $this->handleRelationIdentifier($relationIdentifier, $relationHolder);
@@ -40,13 +41,9 @@ class RelationHolderFactory
 
     private function handleRelationIdentifier($relationKey, RelationHolder $relationHolder, Relation $parent = null)
     {
-        dump('key: '.$relationKey);
-        dump('parent: '.$parent);
-
         $delimiterPos      = strrpos($relationKey, $this->delimiter);
         $relationInsertion = function ($relationIdentifier) use ($relationHolder, $parent) {
             if (!$relationHolder->relationExists($relationIdentifier)) {
-                dump("relation doesn't exists");
                 $newRelation = new Relation($relationIdentifier);
 
                 if ($parent) {
@@ -62,15 +59,12 @@ class RelationHolderFactory
         };
 
         if ($delimiterPos === false) {
-            dump('delimiter not found');
             $relationInsertion($relationKey);
 
             return $relationHolder;
         } else {
             $relationIdentifier = substr($relationKey, 0, $delimiterPos);
             $newRelation        = $relationInsertion($relationIdentifier);
-            dump('delimiter found, ' . $relationIdentifier);
-            dump($newRelation);
 
             return $this->handleRelationIdentifier(
                 substr($relationKey, $delimiterPos + 1),

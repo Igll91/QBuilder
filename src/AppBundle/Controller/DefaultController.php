@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Category;
+use AppBundle\Entity\Product;
 use AppBundle\Model\Filter\Filter;
 use AppBundle\Model\Filter\FilterPair;
 use AppBundle\Model\Filter\FilterPairHolder;
@@ -10,10 +12,8 @@ use AppBundle\Model\Filter\Type\DoubleFilterType;
 use AppBundle\Model\Filter\Type\IntegerFilterType;
 use AppBundle\Model\Filter\Type\StringFilterType;
 use AppBundle\Model\Operator\PrebuiltAggregate\OperatorAggregator;
-use AppBundle\Model\Parser\MongoDbParser;
 use AppBundle\Model\Parser\RuleParser;
-use AppBundle\Model\RelationParser\DoctrineEntityParser;
-use AppBundle\Model\RelationParser\RelationHolderFactory;
+use AppBundle\Model\QueryBuilderParser\DoctrineEntityParser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -159,11 +159,10 @@ class DefaultController extends Controller
         $entityMap2 = 'AppBundle:Product.AppBundle:Category.AppBundle:CategoryType';
 
         $dep = new DoctrineEntityParser($this->getDoctrine()->getManager());
+        $dep->parse($result, Product::class);
 //        $map = $dep->parse($entityMap);
 //        $map2 = $dep->parse($entityMap2);
 
-        $relationHolderFactory = new RelationHolderFactory();
-        dump($relationHolderFactory->createRelationHolder($result));
 //        dump($dep->extractRelationFieldIdentifiers($result));
         //TODO: result should be mapped so that relation is joined only once!
 

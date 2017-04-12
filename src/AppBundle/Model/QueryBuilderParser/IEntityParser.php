@@ -6,7 +6,7 @@
  * Time: 20:19
  */
 
-namespace AppBundle\Model\RelationParser;
+namespace AppBundle\Model\QueryBuilderParser;
 
 
 interface IEntityParser
