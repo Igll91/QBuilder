@@ -29,18 +29,21 @@ abstract class AbstractValueHolderParser
     public function parse(ValueHolder $valueHolder)
     {
         $operatorReflection = new \ReflectionClass($valueHolder->getOperator());
-        $params             = [$valueHolder->getOperator(), $valueHolder->getValue()];
+        $params             = [$valueHolder];
 
-        return call_user_func_array('parse'.$operatorReflection->getShortName(), $params);
+        return call_user_func_array([$this, 'parse'.$operatorReflection->getShortName()], $params);
     }
 
     protected function getFieldIdentifier(Filter $filter)
     {
         $filterId     = $filter->getIdentifier();
-        $delimiterPos = strpos($filterId, $this->relationDelimiter);
+        $delimiterPos = strrpos($filterId, $this->relationDelimiter);
 
         if ($delimiterPos !== false) {
-            return substr($filterId, 0, $delimiterPos);
+            $relationKey = substr($filterId, 0, $delimiterPos);
+            $relation    = $this->relationHolder->getRelationByKey($relationKey);
+
+            return $relation->getAlias().substr($filterId, $delimiterPos);
         } else {
             return $filterId;
         }

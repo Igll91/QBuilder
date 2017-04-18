@@ -17,7 +17,9 @@ use AppBundle\Model\ValueHolder\IValueHolder;
 use AppBundle\Model\ValueHolder\OrConditionValueHolder;
 use AppBundle\Model\ValueHolder\ValueHolder;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use function foo\func;
 use Monolog\Logger;
 
 class DoctrineEntityParser implements IEntityParser
@@ -66,19 +68,47 @@ class DoctrineEntityParser implements IEntityParser
         dump($queryBuilder->getQuery()->getDQL());
         dump($queryBuilder->getQuery()->getSQL());
 
+        $ddd = $this->parseValueHolder($valueHolder, $queryBuilder, $doctrineValueHolderParser);
+        dump($ddd->getQuery()->getDQL());
+        dump($ddd->getQuery()->getSQL());
     }
 
-    private function parseValueHolder(IValueHolder $valueHolder, QueryBuilder $queryBuilder)
-    {
-//        TODO: parse ValueHolder
-        switch (get_class($valueHolder)) {
-        case AndConditionValueHolder::class:
-        case OrConditionValueHolder::class:
-            break;
-        case ValueHolder::class:
+    private function parseValueHolder(
+        ConditionOperatorValueHolder $valueHolder,
+        QueryBuilder $queryBuilder,
+        AbstractValueHolderParser $valueHolderParser
+    ) {
+        $loop = function (ConditionOperatorValueHolder $conditionOperatorValueHolder) use ($valueHolderParser, &$loop) {
 
-            break;
-        }
+            switch (get_class($conditionOperatorValueHolder)) {
+            case AndConditionValueHolder::class:
+                $expr = new Expr\Andx();
+                break;
+            case OrConditionValueHolder::class:
+                $expr = new Expr\Orx();
+                break;
+            }
+
+            foreach ($conditionOperatorValueHolder->getValue() as $item) {
+                switch (get_class($item)) {
+                case AndConditionValueHolder::class:
+                case OrConditionValueHolder::class:
+                    $expr->add($loop($item));
+                    break;
+                case ValueHolder::class:
+                    $expr->add($valueHolderParser->parse($item));
+                    break;
+                }
+            }
+
+            return $expr;
+        };
+
+        $expression = $loop($valueHolder);
+
+        $queryBuilder->where($expression);
+
+        return $queryBuilder;
     }
 
     private function getEntity($entityName)
