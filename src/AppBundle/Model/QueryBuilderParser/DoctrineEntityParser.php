@@ -9,28 +9,26 @@
 namespace AppBundle\Model\QueryBuilderParser;
 
 use AppBundle\Helper\DoctrineEntityHelper;
-use AppBundle\Helper\ValueChecker;
 use AppBundle\Model\RelationParser\RelationHolderFactory;
 use AppBundle\Model\ValueHolder\AndConditionValueHolder;
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
-use AppBundle\Model\ValueHolder\IValueHolder;
 use AppBundle\Model\ValueHolder\OrConditionValueHolder;
 use AppBundle\Model\ValueHolder\ValueHolder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-use function foo\func;
-use Monolog\Logger;
 
 class DoctrineEntityParser implements IEntityParser
 {
     private $entityManager;
     private $delimiter;
+    private $rootAlias;
 
-    public function __construct(EntityManager $entityManager, $delimiter = '.')
+    public function __construct(EntityManager $entityManager, $rootAlias = 'root', $delimiter = '.')
     {
         $this->entityManager = $entityManager;
         $this->delimiter     = $delimiter;
+        $this->rootAlias     = $rootAlias;
     }
 
     public function parse(ConditionOperatorValueHolder $valueHolder, $rootEntity)
@@ -41,13 +39,13 @@ class DoctrineEntityParser implements IEntityParser
             $rootEntity = get_class($rootEntity);
         }
 
-        $relationHolderFactory     = new RelationHolderFactory();
-        $relationHolder            = $relationHolderFactory->createRelationHolder($valueHolder);
-        $doctrineValueHolderParser = new DoctrineValueHolderParser($relationHolder, $this->delimiter);
-        $queryBuilder              = $this->entityManager->createQueryBuilder();
+        $relationHolderFactory = new RelationHolderFactory();
+        $relationHolder = $relationHolderFactory->createRelationHolder($valueHolder);
+        $doctrineValueHolderParser = new DoctrineValueHolderParser($relationHolder, $this->rootAlias, $this->delimiter);
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
-        $queryBuilder->from($rootEntity, 'root');
-        $queryBuilder->select('root.identifier'); //TODO: which fields to select?
+        $queryBuilder->from($rootEntity, $this->rootAlias);
+        $queryBuilder->select($this->rootAlias.'.identifier'); //TODO: which fields to select?
 
         dump($relationHolder);
 
@@ -61,7 +59,7 @@ class DoctrineEntityParser implements IEntityParser
                     $alias
                 );
             } else {
-                $queryBuilder->leftJoin('root.'.$currentRelation->getIdentifier(), $alias);
+                $queryBuilder->leftJoin($this->rootAlias.'.'.$currentRelation->getIdentifier(), $alias);
             }
         }
 
@@ -78,26 +76,36 @@ class DoctrineEntityParser implements IEntityParser
         QueryBuilder $queryBuilder,
         AbstractValueHolderParser $valueHolderParser
     ) {
-        $loop = function (ConditionOperatorValueHolder $conditionOperatorValueHolder) use ($valueHolderParser, &$loop) {
+        $loop = function (ConditionOperatorValueHolder $conditionOperatorValueHolder) use (
+            $queryBuilder,
+            $valueHolderParser,
+            &$loop
+        ) {
 
             switch (get_class($conditionOperatorValueHolder)) {
-            case AndConditionValueHolder::class:
-                $expr = new Expr\Andx();
-                break;
-            case OrConditionValueHolder::class:
-                $expr = new Expr\Orx();
-                break;
+                case AndConditionValueHolder::class:
+                    $expr = new Expr\Andx();
+                    break;
+                case OrConditionValueHolder::class:
+                    $expr = new Expr\Orx();
+                    break;
             }
 
             foreach ($conditionOperatorValueHolder->getValue() as $item) {
                 switch (get_class($item)) {
-                case AndConditionValueHolder::class:
-                case OrConditionValueHolder::class:
-                    $expr->add($loop($item));
-                    break;
-                case ValueHolder::class:
-                    $expr->add($valueHolderParser->parse($item));
-                    break;
+                    case AndConditionValueHolder::class:
+                    case OrConditionValueHolder::class:
+                        $expr->add($loop($item));
+                        break;
+                    case ValueHolder::class:
+                        /* @var $expressionHolder DoctrineExpressionHolder */
+                        $expressionHolder = $valueHolderParser->parse($item);
+                        $expr->add($expressionHolder->getExpression());
+
+                        foreach ($expressionHolder->getKeyValuePairs() as $pair) {
+                            $queryBuilder->setParameter($pair->getKey(), $pair->getValue());
+                        }
+                        break;
                 }
             }
 

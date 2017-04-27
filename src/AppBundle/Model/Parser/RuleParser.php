@@ -22,6 +22,10 @@ class RuleParser extends Parser
         $query = ValueChecker::getStringOrEx($query);
         $json  = JsonHelper::decode($query);
 
+        if ($json->getStatus() != JsonHelper::SUCCESS) {
+            throw new \InvalidArgumentException("Passed JSON query is invalid: ${query}");
+        }
+
         return $this->parseConditionOperator($json->getResult(), 0);
     }
 

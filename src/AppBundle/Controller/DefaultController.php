@@ -25,6 +25,37 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $jsonSimple = '{
+  "condition": "AND",
+  "rules": [
+    {
+      "id": "price",
+      "field": "price",
+      "type": "double",
+      "input": "text",
+      "operator": "less",
+      "value": "10.25"
+    },
+    {
+      "id": "name",
+      "field": "name",
+      "type": "string",
+      "input": "text",
+      "operator": "begins_with",
+      "value": "sd"
+    },
+    {
+      "id": "inStock",
+      "field": "in_stock",
+      "type": "integer",
+      "input": "radio",
+      "operator": "equal",
+      "value": "1"
+    }
+  ],
+  "valid": true
+  }';
+
         $json = '{
   "condition": "AND",
   "rules": [
@@ -40,7 +71,7 @@ class DefaultController extends Controller
       "condition": "OR",
       "rules": [
         {
-          "id": "category",
+          "id": "category.id",
           "field": "category",
           "type": "integer",
           "input": "select",
@@ -51,7 +82,7 @@ class DefaultController extends Controller
            ]
         },
         {
-          "id": "category",
+          "id": "category.id",
           "field": "category",
           "type": "integer",
           "input": "select",
@@ -93,7 +124,7 @@ class DefaultController extends Controller
       "value": "1"
     },
     {
-      "id": "category",
+      "id": "category.id",
       "field": "category",
       "type": "integer",
       "input": "select",
@@ -101,7 +132,7 @@ class DefaultController extends Controller
       "value": null
     },
     {
-      "id": "category.type",
+      "id": "category.type.id",
       "field": "category.type",
       "type": "integer",
       "input": "select",
@@ -129,10 +160,10 @@ class DefaultController extends Controller
 }';
         $fph  = new FilterPairHolder();
         $fp1  = new FilterPair(new Filter('price', new DoubleFilterType()));
-        $fp2  = new FilterPair(new Filter('category', new IntegerFilterType()));
+        $fp2  = new FilterPair(new Filter('category.id', new IntegerFilterType()));
         $fp3  = new FilterPair(new Filter('name', new StringFilterType()));
         $fp4  = new FilterPair(new Filter('inStock', new BooleanFilterType()));
-        $fp5  = new FilterPair(new Filter('category.type', new IntegerFilterType()));
+        $fp5  = new FilterPair(new Filter('category.type.id', new IntegerFilterType()));
         $fp6  = new FilterPair(new Filter('category.name', new StringFilterType()));
         $fp7  = new FilterPair(new Filter('category.type.name', new StringFilterType()));
         $fp1->addOperators(OperatorAggregator::getOperators(OperatorAggregator::NUMERIC_INPUT_TYPE,
@@ -151,30 +182,19 @@ class DefaultController extends Controller
             OperatorAggregator::FULL_SIZE));
         $fph->addAllFilterPairs(array($fp1, $fp2, $fp3, $fp4, $fp5, $fp6, $fp7));
         $parser = new RuleParser($fph);
+//        $result = $parser->parseQuery($jsonSimple);
         $result = $parser->parseQuery($json);
 
         dump($result);
 
-        $entityMap  = 'AppBundle:Product.AppBundle:Category';
-        $entityMap2 = 'AppBundle:Product.AppBundle:Category.AppBundle:CategoryType';
-
         $dep = new DoctrineEntityParser($this->getDoctrine()->getManager());
         $dep->parse($result, Product::class);
-//        $map = $dep->parse($entityMap);
-//        $map2 = $dep->parse($entityMap2);
-
-//        dump($dep->extractRelationFieldIdentifiers($result));
-        //TODO: result should be mapped so that relation is joined only once!
-
-//        dump($map);
-//        dump($map2);
-
-//        dump($dep->mergeRelations(array($map, $map2)));
 
         die();
+
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir') . '/..') . DIRECTORY_SEPARATOR,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
 }

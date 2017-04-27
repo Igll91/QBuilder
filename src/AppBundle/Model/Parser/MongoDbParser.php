@@ -26,7 +26,6 @@ use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
  */
 class MongoDbParser extends Parser
 {
-
     private $operatorParser;
 
     public function __construct(FilterPairHolder $filterPairHolder)

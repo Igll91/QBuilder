@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\RelationParser;
 
-
 class RelationHolder
 {
     /**

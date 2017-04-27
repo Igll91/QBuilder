@@ -19,11 +19,13 @@ abstract class AbstractValueHolderParser
 {
     private $relationHolder;
     private $relationDelimiter;
+    private $rootAlias;
 
-    public function __construct(RelationHolder $relationHolder, $relationDelimiter = '.')
+    public function __construct(RelationHolder $relationHolder, $rootAlias, $relationDelimiter = '.')
     {
         $this->relationHolder    = $relationHolder;
         $this->relationDelimiter = $relationDelimiter;
+        $this->rootAlias         = $rootAlias;
     }
 
     public function parse(ValueHolder $valueHolder)
@@ -45,7 +47,7 @@ abstract class AbstractValueHolderParser
 
             return $relation->getAlias().substr($filterId, $delimiterPos);
         } else {
-            return $filterId;
+            return $this->rootAlias.'.'.$filterId;
         }
     }
 
