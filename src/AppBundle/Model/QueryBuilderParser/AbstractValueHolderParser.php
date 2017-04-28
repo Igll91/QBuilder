@@ -9,9 +9,6 @@
 namespace AppBundle\Model\QueryBuilderParser;
 
 use AppBundle\Model\Filter\Filter;
-use AppBundle\Model\Operator\BeginsWithOperator;
-use AppBundle\Model\Operator\BetweenOperator;
-use AppBundle\Model\Operator\Operator;
 use AppBundle\Model\RelationParser\RelationHolder;
 use AppBundle\Model\ValueHolder\ValueHolder;
 
@@ -28,6 +25,13 @@ abstract class AbstractValueHolderParser
         $this->rootAlias         = $rootAlias;
     }
 
+    /**
+     * Parse valueHolder with corresponding operator function into queryable entity.
+     *
+     * @param ValueHolder $valueHolder Contains Operator, Field and value required for building query.
+     *
+     * @return mixed Inherited implementation specific.
+     */
     public function parse(ValueHolder $valueHolder)
     {
         $operatorReflection = new \ReflectionClass($valueHolder->getOperator());
@@ -36,6 +40,26 @@ abstract class AbstractValueHolderParser
         return call_user_func_array([$this, 'parse'.$operatorReflection->getShortName()], $params);
     }
 
+    /**
+     * Replaces filter field relation identifiers with relation aliases.
+     *
+     * <pre>
+     * Example:
+     *  Given that filter identifier is equal to: 'parent_relation.field_id'
+     *  For parent filter key, which in this case is 'parent_relation'
+     *  Search alias for parent filter key
+     *  Prepend filter field identifier with parent alias.
+     *
+     *  In case that filter is root entity/table field
+     *  Prepend root alias to the filter field identifier.
+     *
+     *  Why?: to avoid ambiguous column names.
+     * </pre>
+     *
+     * @param Filter $filter
+     *
+     * @return string
+     */
     protected function getFieldIdentifier(Filter $filter)
     {
         $filterId     = $filter->getIdentifier();
@@ -47,47 +71,51 @@ abstract class AbstractValueHolderParser
 
             return $relation->getAlias().substr($filterId, $delimiterPos);
         } else {
-            return $this->rootAlias.'.'.$filterId;
+            return ''.$this->rootAlias.$this->relationDelimiter.$filterId;
         }
     }
 
-    public abstract function parseBeginsWithOperator(ValueHolder $valueHolder);
+//======================================================================================================================
+// ABSTRACT FUNCTIONS
+//======================================================================================================================
 
-    public abstract function parseBetweenOperator(ValueHolder $valueHolder);
+    abstract public function parseBeginsWithOperator(ValueHolder $valueHolder);
 
-    public abstract function parseContainsOperator(ValueHolder $valueHolder);
+    abstract public function parseBetweenOperator(ValueHolder $valueHolder);
 
-    public abstract function parseEndsWithOperator(ValueHolder $valueHolder);
+    abstract public function parseContainsOperator(ValueHolder $valueHolder);
 
-    public abstract function parseEqualOperator(ValueHolder $valueHolder);
+    abstract public function parseEndsWithOperator(ValueHolder $valueHolder);
 
-    public abstract function parseGreaterOperator(ValueHolder $valueHolder);
+    abstract public function parseEqualOperator(ValueHolder $valueHolder);
 
-    public abstract function parseGreaterOrEqualOperator(ValueHolder $valueHolder);
+    abstract public function parseGreaterOperator(ValueHolder $valueHolder);
 
-    public abstract function parseInOperator(ValueHolder $valueHolder);
+    abstract public function parseGreaterOrEqualOperator(ValueHolder $valueHolder);
 
-    public abstract function parseIsEmptyOperator(ValueHolder $valueHolder);
+    abstract public function parseInOperator(ValueHolder $valueHolder);
 
-    public abstract function parseIsNotEmptyOperator(ValueHolder $valueHolder);
+    abstract public function parseIsEmptyOperator(ValueHolder $valueHolder);
 
-    public abstract function parseIsNotNullOperator(ValueHolder $valueHolder);
+    abstract public function parseIsNotEmptyOperator(ValueHolder $valueHolder);
 
-    public abstract function parseIsNullOperator(ValueHolder $valueHolder);
+    abstract public function parseIsNotNullOperator(ValueHolder $valueHolder);
 
-    public abstract function parseLessOperator(ValueHolder $valueHolder);
+    abstract public function parseIsNullOperator(ValueHolder $valueHolder);
 
-    public abstract function parseLessOrEqualOperator(ValueHolder $valueHolder);
+    abstract public function parseLessOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotBeginsWithOperator(ValueHolder $valueHolder);
+    abstract public function parseLessOrEqualOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotBetweenOperator(ValueHolder $valueHolder);
+    abstract public function parseNotBeginsWithOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotContainsOperator(ValueHolder $valueHolder);
+    abstract public function parseNotBetweenOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotEndsWithOperator(ValueHolder $valueHolder);
+    abstract public function parseNotContainsOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotEqualOperator(ValueHolder $valueHolder);
+    abstract public function parseNotEndsWithOperator(ValueHolder $valueHolder);
 
-    public abstract function parseNotInOperator(ValueHolder $valueHolder);
+    abstract public function parseNotEqualOperator(ValueHolder $valueHolder);
+
+    abstract public function parseNotInOperator(ValueHolder $valueHolder);
 }

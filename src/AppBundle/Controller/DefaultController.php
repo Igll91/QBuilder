@@ -166,6 +166,8 @@ class DefaultController extends Controller
   ],
   "valid": true
 }';
+//        process 1 start - put into config/db/... must be loadable
+
         $fph  = new FilterPairHolder();
         $fp1  = new FilterPair(new Filter('price', new DoubleFilterType()));
         $fp2  = new FilterPair(new Filter('category.identifier', new IntegerFilterType()));
@@ -189,6 +191,9 @@ class DefaultController extends Controller
         $fp7->addOperators(OperatorAggregator::getOperators(OperatorAggregator::TEXT_INPUT_TYPE,
             OperatorAggregator::FULL_SIZE));
         $fph->addAllFilterPairs(array($fp1, $fp2, $fp3, $fp4, $fp5, $fp6, $fp7));
+
+//        process 1 end - put into config/db/... must be loadable
+
         $parser = new RuleParser($fph);
 //        $result = $parser->parseQuery($jsonSimple);
         $result = $parser->parseQuery($json);

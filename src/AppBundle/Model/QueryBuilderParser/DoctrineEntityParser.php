@@ -69,6 +69,7 @@ class DoctrineEntityParser implements IEntityParser
         $ddd = $this->parseValueHolder($valueHolder, $queryBuilder, $doctrineValueHolderParser);
         dump($ddd->getQuery()->getDQL());
         dump($ddd->getQuery()->getSQL());
+        dump($ddd->getQuery()->getResult());
     }
 
     private function parseValueHolder(

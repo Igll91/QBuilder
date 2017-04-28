@@ -8,6 +8,12 @@
 
 namespace AppBundle\Model\ValueHolder;
 
+/**
+ * Holds collection of IValueHolder objects.
+ *
+ * Class ConditionOperatorValueHolder
+ * @package AppBundle\Model\ValueHolder
+ */
 abstract class ConditionOperatorValueHolder implements IValueHolder
 {
     /**

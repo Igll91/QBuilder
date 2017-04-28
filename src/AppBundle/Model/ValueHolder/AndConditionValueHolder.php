@@ -8,6 +8,12 @@
 
 namespace AppBundle\Model\ValueHolder;
 
+/**
+ * Represents sql AND condition operator.
+ *
+ * Class AndConditionValueHolder
+ * @package AppBundle\Model\ValueHolder
+ */
 class AndConditionValueHolder extends ConditionOperatorValueHolder
 {
 }

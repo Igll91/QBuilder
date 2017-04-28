@@ -12,6 +12,7 @@ use AppBundle\Helper\JsonHelper;
 use AppBundle\Helper\ValueChecker;
 use AppBundle\Model\Exception\ValidationException;
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
+use AppBundle\Model\ValueHolder\IValueHolder;
 use AppBundle\Model\ValueHolder\Parser\RuleConditionOperatorValueHolderParser;
 use AppBundle\Model\ValueHolder\ValueHolder;
 
@@ -72,7 +73,7 @@ class RuleParser extends Parser
      * details should be shown to user.
      * @throws ValidationException If validation was invalid.
      *
-     * @return array[IValueHolder] Array of IValueHolder instances.
+     * @return IValueHolder[] Array of IValueHolder instances.
      */
     private function parseRules(array $rules, $iterationLevel)
     {

@@ -11,6 +11,14 @@ namespace AppBundle\Model\QueryBuilderParser;
 use AppBundle\Helper\KeyValuePair;
 use Doctrine\ORM\Query\Expr;
 
+/**
+ * Holds one of doctrine query expression and list of KeyValuePair objects.
+ *
+ * Expression should be used in combination with KeyValuePair's to build parameterized query.
+ *
+ * Class DoctrineExpressionHolder
+ * @package AppBundle\Model\QueryBuilderParser
+ */
 class DoctrineExpressionHolder
 {
     private $expression;
@@ -29,7 +37,7 @@ class DoctrineExpressionHolder
 
     public function addKeyValuePairs(array $keyValuePairs)
     {
-        call_user_func_array('addKeyValuePair', $keyValuePairs);
+        array_walk($keyValuePairs, array($this, 'addKeyValuePair'));
     }
 
 //======================================================================================================================

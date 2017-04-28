@@ -14,6 +14,16 @@ use AppBundle\Model\Filter\Type\DateTimeFilterType;
 use AppBundle\Model\ValueHolder\ValueHolder;
 use Doctrine\ORM\Query\Expr;
 
+/**
+ * Parses ValueHolder into DoctrineExpressionHolder.
+ *
+ * Parses given ValueHolder object via its Operator, Filter and value into DoctrineExpressionHolder object.
+ *
+ * @see     DoctrineExpressionHolder
+ *
+ * Class DoctrineValueHolderParser
+ * @package AppBundle\Model\QueryBuilderParser
+ */
 class DoctrineValueHolderParser extends AbstractValueHolderParser
 {
     /**
@@ -51,13 +61,12 @@ class DoctrineValueHolderParser extends AbstractValueHolderParser
      *
      * Doctrine creates NOT expressions by applying not to other expressions.
      * We reuse defined operator definitions and apply not expression on them.
-     * NOTE: only for NOT expression functions.
      *
-     * @param $valueHolder
+     * @param $valueHolder ValueHolder Contains Operator, Field and value required for building query.
      *
      * @return DoctrineExpressionHolder
      */
-    private function parseNotOperator($valueHolder)
+    private function parseNotOperator(ValueHolder $valueHolder)
     {
         $dbt     = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $baseFun = str_replace('Not', '', $dbt[1]['function']);
@@ -97,6 +106,7 @@ class DoctrineValueHolderParser extends AbstractValueHolderParser
 
         $expr = $expr->between($this->getFieldIdentifier($valueHolder->getFilter()), ":$paramKeyX",
             ":$paramKeyY");
+        $exprHolder->setExpression($expr);
 
         return $exprHolder;
     }
