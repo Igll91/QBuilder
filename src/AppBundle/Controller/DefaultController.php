@@ -71,7 +71,7 @@ class DefaultController extends Controller
       "condition": "OR",
       "rules": [
         {
-          "id": "category.id",
+          "id": "category.identifier",
           "field": "category",
           "type": "integer",
           "input": "select",
@@ -82,7 +82,7 @@ class DefaultController extends Controller
            ]
         },
         {
-          "id": "category.id",
+          "id": "category.identifier",
           "field": "category",
           "type": "integer",
           "input": "select",
@@ -124,7 +124,7 @@ class DefaultController extends Controller
       "value": "1"
     },
     {
-      "id": "category.id",
+      "id": "category.identifier",
       "field": "category",
       "type": "integer",
       "input": "select",
@@ -132,7 +132,7 @@ class DefaultController extends Controller
       "value": null
     },
     {
-      "id": "category.type.id",
+      "id": "category.type.identifier",
       "field": "category.type",
       "type": "integer",
       "input": "select",
@@ -145,6 +145,14 @@ class DefaultController extends Controller
       "type": "string",
       "input": "text",
       "operator": "equal",
+      "value": "ASd"
+    },
+     {
+      "id": "category.name",
+      "field": "category.name",
+      "type": "string",
+      "input": "text",
+      "operator": "not_equal",
       "value": "ASd"
     },
     {
@@ -160,10 +168,10 @@ class DefaultController extends Controller
 }';
         $fph  = new FilterPairHolder();
         $fp1  = new FilterPair(new Filter('price', new DoubleFilterType()));
-        $fp2  = new FilterPair(new Filter('category.id', new IntegerFilterType()));
+        $fp2  = new FilterPair(new Filter('category.identifier', new IntegerFilterType()));
         $fp3  = new FilterPair(new Filter('name', new StringFilterType()));
         $fp4  = new FilterPair(new Filter('inStock', new BooleanFilterType()));
-        $fp5  = new FilterPair(new Filter('category.type.id', new IntegerFilterType()));
+        $fp5  = new FilterPair(new Filter('category.type.identifier', new IntegerFilterType()));
         $fp6  = new FilterPair(new Filter('category.name', new StringFilterType()));
         $fp7  = new FilterPair(new Filter('category.type.name', new StringFilterType()));
         $fp1->addOperators(OperatorAggregator::getOperators(OperatorAggregator::NUMERIC_INPUT_TYPE,

@@ -31,7 +31,7 @@ class DoctrineValueHolderParser extends AbstractValueHolderParser
     private function simpleExprHolder(ValueHolder $valueHolder, $exprMethod, $value = null)
     {
         $expr     = new Expr();
-        $paramKey = uniqid($valueHolder->getFID());
+        $paramKey = uniqid(str_replace('.', '_', $valueHolder->getFID()));
 
         if ($valueHolder->getOperator()->isMultiple()) {
             $paramValue = $value ? $value : $valueHolder->getValue();
@@ -59,7 +59,7 @@ class DoctrineValueHolderParser extends AbstractValueHolderParser
      */
     private function parseNotOperator($valueHolder)
     {
-        $dbt     = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $dbt     = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $baseFun = str_replace('Not', '', $dbt[1]['function']);
 
         $expr       = new Expr();
