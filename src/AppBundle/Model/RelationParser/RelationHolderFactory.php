@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\RelationParser;
 
-
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
 
 class RelationHolderFactory
@@ -29,16 +28,26 @@ class RelationHolderFactory
      */
     public function createRelationHolder(ConditionOperatorValueHolder $holder)
     {
-        $relationHolder               = new RelationHolder();
-        $extractedRelationIdentifiers = $this->extractRelationFieldIdentifiers($holder);
+        $relationHolder = new RelationHolder();
+        $relationIds    = $this->extractRelationFieldIdentifiers($holder);
 
-        foreach ($extractedRelationIdentifiers as $relationIdentifier) {
+        foreach ($relationIds as $relationIdentifier) {
             $this->handleRelationIdentifier($relationIdentifier, $relationHolder);
         }
 
         return $relationHolder;
     }
 
+    /**
+     * Turns given field relation string representation into Relation object and appends it to RelationHolder.
+     *
+     * If given field relation string representation (argument: relationKey) contains delimiter, the first
+     * parent is taken and processed into Relation object, and added to next iteration as parent. Process
+     * is repeated until end of relation string representation is reached.
+     *
+     * @see Relation
+     *
+     */
     private function handleRelationIdentifier($relationKey, RelationHolder $relationHolder, Relation $parent = null)
     {
         $delimiterPos      = strrpos($relationKey, $this->delimiter);
@@ -75,7 +84,24 @@ class RelationHolderFactory
     }
 
     /**
-     * TODO: TEST
+     * Extract unique relation string representations from ConditionOperatorValueHolder.
+     *
+     * Takes all unique ConditionOperatorValueHolder's filter relations identifiers.
+     * <pre>
+     * Example:
+     * For values [
+     *  "relation1.field1", "relation.1.field2", "relation2.field3", "field5"
+     * ]
+     *
+     * Returned value will be [
+     * "relation1", "relation2"
+     * ]
+     *
+     * Because:
+     *  * first two field identifiers point to same relation
+     *  * last field identifier has no relation
+     *
+     * </pre>
      *
      * @param ConditionOperatorValueHolder $holder
      * @param array                        $fields
@@ -84,8 +110,6 @@ class RelationHolderFactory
      */
     private function extractRelationFieldIdentifiers(ConditionOperatorValueHolder $holder, array $fields = [])
     {
-//        category.type ... category.name => have same relation
-
         foreach ($holder->getValue() as $value) {
             if (is_a($value, ConditionOperatorValueHolder::class)) {
                 $fields = $this->extractRelationFieldIdentifiers($value, $fields);
