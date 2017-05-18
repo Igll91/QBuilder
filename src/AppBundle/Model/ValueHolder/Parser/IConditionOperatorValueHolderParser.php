@@ -10,6 +10,11 @@ namespace AppBundle\Model\ValueHolder\Parser;
 
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
 
+/**
+ * Implement querybuilderjs condition operator parser.
+ *
+ * @see http://querybuilder.js.org/
+ */
 interface IConditionOperatorValueHolderParser
 {
     /**

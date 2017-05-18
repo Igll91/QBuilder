@@ -41,9 +41,10 @@ class RelationHolderFactory
     /**
      * Turns given field relation string representation into Relation object and appends it to RelationHolder.
      *
-     * If given field relation string representation (argument: relationKey) contains delimiter, the first
-     * parent is taken and processed into Relation object, and added to next iteration as parent. Process
-     * is repeated until end of relation string representation is reached.
+     * Process relation string representation into Relation object.
+     * If relation string contains delimiter, which means it has entity parent/s,
+     * it is split and processed from left to right (furthest parent).
+     * It is repeated until end of relation string representation is reached.
      *
      * @see Relation
      *
@@ -90,7 +91,7 @@ class RelationHolderFactory
      * <pre>
      * Example:
      * For values [
-     *  "relation1.field1", "relation.1.field2", "relation2.field3", "field5"
+     *  "relation1.field1", "relation1.field2", "relation2.field3", "field5"
      * ]
      *
      * Returned value will be [

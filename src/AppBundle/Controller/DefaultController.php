@@ -14,6 +14,7 @@ use AppBundle\Model\Filter\Type\StringFilterType;
 use AppBundle\Model\Operator\PrebuiltAggregate\OperatorAggregator;
 use AppBundle\Model\Parser\RuleParser;
 use AppBundle\Model\QueryBuilderParser\DoctrineEntityParser;
+use AppBundle\Model\QueryBuilderParser\QueryInquiry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -168,14 +169,14 @@ class DefaultController extends Controller
 }';
 //        process 1 start - put into config/db/... must be loadable
 
-        $fph  = new FilterPairHolder();
-        $fp1  = new FilterPair(new Filter('price', new DoubleFilterType()));
-        $fp2  = new FilterPair(new Filter('category.identifier', new IntegerFilterType()));
-        $fp3  = new FilterPair(new Filter('name', new StringFilterType()));
-        $fp4  = new FilterPair(new Filter('inStock', new BooleanFilterType()));
-        $fp5  = new FilterPair(new Filter('category.type.identifier', new IntegerFilterType()));
-        $fp6  = new FilterPair(new Filter('category.name', new StringFilterType()));
-        $fp7  = new FilterPair(new Filter('category.type.name', new StringFilterType()));
+        $fph = new FilterPairHolder();
+        $fp1 = new FilterPair(new Filter('price', new DoubleFilterType()));
+        $fp2 = new FilterPair(new Filter('category.identifier', new IntegerFilterType()));
+        $fp3 = new FilterPair(new Filter('name', new StringFilterType()));
+        $fp4 = new FilterPair(new Filter('inStock', new BooleanFilterType()));
+        $fp5 = new FilterPair(new Filter('category.type.identifier', new IntegerFilterType()));
+        $fp6 = new FilterPair(new Filter('category.name', new StringFilterType()));
+        $fp7 = new FilterPair(new Filter('category.type.name', new StringFilterType()));
         $fp1->addOperators(OperatorAggregator::getOperators(OperatorAggregator::NUMERIC_INPUT_TYPE,
             OperatorAggregator::FULL_SIZE));
         $fp2->addOperators(OperatorAggregator::getOperators(OperatorAggregator::SELECT_TYPE,
@@ -200,8 +201,9 @@ class DefaultController extends Controller
 
         dump($result);
 
-        $dep = new DoctrineEntityParser($this->getDoctrine()->getManager());
-        $dep->parse($result, Product::class);
+        $dep          = new DoctrineEntityParser($this->getDoctrine()->getManager());
+        $queryInquiry = new QueryInquiry(Product::class);
+        $dep->parse($result, $queryInquiry);
 
         die();
 

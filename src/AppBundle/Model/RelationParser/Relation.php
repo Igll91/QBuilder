@@ -10,13 +10,20 @@ namespace AppBundle\Model\RelationParser;
 
 use AppBundle\Helper\ValueChecker;
 
+/**
+ * Contains information about ORM object relation.
+ */
 class Relation
 {
+    //Delimiter used for child-parent separation when creating ALIAS string.
     const RELATION_ALIAS_DELIMITER = '_';
 
+    /**
+     * Current relation string identifier representation.
+     *
+     * @var String
+     */
     private $identifier;
-
-    private $hasParent;
 
     /**
      * @var Relation Parent relation.
@@ -34,29 +41,52 @@ class Relation
         return $this->getIdentifier();
     }
 
+    /**
+     * Return only this Relation identifier.
+     *
+     * Returns identifier for single Relation without its parent.
+     */
     public function getFieldIdentifier()
     {
         return $this->identifier;
     }
 
+    /**
+     * Return full Relation identifier.
+     *
+     * Return full path relation identifier. In case relation has parents
+     * their identifiers are concatenated in front of current Relation.
+     *
+     * @return String
+     */
     public function getIdentifier()
     {
-        if ($this->hasParent) {
+        if ($this->hasParent()) {
             return $this->parent->getIdentifier().'.'.$this->identifier;
         } else {
             return $this->identifier;
         }
     }
 
+    /**
+     * Returns Relation alias.
+     *
+     * Recursively iterate over Relation parents and create combined alias.
+     *
+     * @return String
+     */
     public function getAlias()
     {
-        if ($this->hasParent) {
-            return $this->parent->getIdentifier().self::RELATION_ALIAS_DELIMITER.$this->identifier;
+        if ($this->hasParent()) {
+            return $this->parent->getAlias().self::RELATION_ALIAS_DELIMITER.$this->identifier;
         } else {
             return $this->identifier;
         }
     }
 
+    /**
+     * @return bool True if Relation has parent, false otherwise.
+     */
     public function hasParent()
     {
         return $this->parent !== null;
@@ -64,8 +94,7 @@ class Relation
 
     public function setParent(Relation $relation)
     {
-        $this->hasParent = true;
-        $this->parent    = $relation;
+        $this->parent = $relation;
 
         return $this;
     }

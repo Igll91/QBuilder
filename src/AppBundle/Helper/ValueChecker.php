@@ -63,7 +63,9 @@ final class ValueChecker
      */
     public static function getIntOrEx($value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+//        NOTE: 0 is/is not integer ??? reconsider this decision
+
+        if ($value !== 0 && !filter_var($value, FILTER_VALIDATE_INT)) {
             throw new \InvalidArgumentException("Value (${value}) is not integer!");
         }
 

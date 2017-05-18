@@ -8,7 +8,6 @@
 
 namespace AppBundle\Model\Validator;
 
-
 use AppBundle\Helper\ValueChecker;
 
 class MaxStringValidator extends MaxValidator
@@ -29,5 +28,4 @@ class MaxStringValidator extends MaxValidator
 
         return strlen($currentVal) <= $this->maxValue;
     }
-
 }

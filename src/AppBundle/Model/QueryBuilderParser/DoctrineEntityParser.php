@@ -9,6 +9,7 @@
 namespace AppBundle\Model\QueryBuilderParser;
 
 use AppBundle\Helper\DoctrineEntityHelper;
+use AppBundle\Model\RelationParser\Relation;
 use AppBundle\Model\RelationParser\RelationHolderFactory;
 use AppBundle\Model\ValueHolder\AndConditionValueHolder;
 use AppBundle\Model\ValueHolder\ConditionOperatorValueHolder;
@@ -17,12 +18,13 @@ use AppBundle\Model\ValueHolder\ValueHolder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use phpDocumentor\Reflection\Types\Mixed;
 
 class DoctrineEntityParser implements IEntityParser
 {
     private $entityManager;
     private $delimiter;
-    private $rootAlias;
+    private $rootAlias;     //Alias of the root entity.
 
     public function __construct(EntityManager $entityManager, $rootAlias = 'root', $delimiter = '.')
     {
@@ -31,47 +33,64 @@ class DoctrineEntityParser implements IEntityParser
         $this->rootAlias     = $rootAlias;
     }
 
-    public function parse(ConditionOperatorValueHolder $valueHolder, $rootEntity)
+    /**
+     * Parses given values into SQL and returns result.
+     *
+     * Process is done in few steps:
+     *  1) Relations informations are acquired from ConditionOperatorValueHolder
+     *  2) Relations are applied to doctrine QueryBuilder
+     *  3) Parse ConditionOperatorValueHolder and apply SQL WHERE conditions to QueryBuilder.
+     *  4) Get query and return the result.
+     *
+     * @param ConditionOperatorValueHolder $valueHolder
+     * @param Mixed                        $rootEntity
+     *
+     * @return string[] Array of queried values.
+     */
+    public function parse(ConditionOperatorValueHolder $valueHolder, QueryInquiry $queryInquiry)
     {
         //TODO: relations should be already validated... string id must match entity field
 
-        if (is_object($rootEntity)) {
-            $rootEntity = get_class($rootEntity);
-        }
-
-        $relationHolderFactory = new RelationHolderFactory();
-        $relationHolder = $relationHolderFactory->createRelationHolder($valueHolder);
+        $relationHolderFactory     = new RelationHolderFactory();
+        $relationHolder            = $relationHolderFactory->createRelationHolder($valueHolder);
         $doctrineValueHolderParser = new DoctrineValueHolderParser($relationHolder, $this->rootAlias, $this->delimiter);
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder              = $this->entityManager->createQueryBuilder();
 
-        $queryBuilder->from($rootEntity, $this->rootAlias);
+        $queryBuilder->from($queryInquiry->getRootEntity(), $this->rootAlias);
         $queryBuilder->select($this->rootAlias.'.identifier'); //TODO: which fields to select?
+
+        $queryBuilder->setFirstResult($queryInquiry->getOffset());
+        $queryBuilder->setMaxResults($queryInquiry->getLimit());
 
         dump($relationHolder);
 
         foreach ($relationHolder->getRelations() as $currentRelation) {
-            // TODO: determine type of join based on condition operator ?
-            $alias = $currentRelation->getAlias();
-            dump($alias);
-            if ($currentRelation->hasParent()) {
-                $queryBuilder->leftJoin(
-                    $currentRelation->getParent()->getAlias().'.'.$currentRelation->getFieldIdentifier(),
-                    $alias
-                );
-            } else {
-                $queryBuilder->leftJoin($this->rootAlias.'.'.$currentRelation->getIdentifier(), $alias);
-            }
+            $this->handleJoin($currentRelation, $queryBuilder);
         }
 
         dump($queryBuilder->getQuery()->getDQL());
         dump($queryBuilder->getQuery()->getSQL());
 
+//        TODO: validate VALUES !!!
+
         $ddd = $this->parseValueHolder($valueHolder, $queryBuilder, $doctrineValueHolderParser);
+
         dump($ddd->getQuery()->getDQL());
         dump($ddd->getQuery()->getSQL());
         dump($ddd->getQuery()->getResult());
+
+        return $ddd->getQuery()->getArrayResult();
     }
 
+    /**
+     * Build and apply WHERE criteria based on ConditionOperatorValueHolder values.
+     *
+     * @param ConditionOperatorValueHolder $valueHolder
+     * @param QueryBuilder                 $queryBuilder
+     * @param AbstractValueHolderParser    $valueHolderParser
+     *
+     * @return QueryBuilder
+     */
     private function parseValueHolder(
         ConditionOperatorValueHolder $valueHolder,
         QueryBuilder $queryBuilder,
@@ -90,6 +109,8 @@ class DoctrineEntityParser implements IEntityParser
                 case OrConditionValueHolder::class:
                     $expr = new Expr\Orx();
                     break;
+                default:
+                    throw new \InvalidArgumentException("Unsupported Condition operator.");
             }
 
             foreach ($conditionOperatorValueHolder->getValue() as $item) {
@@ -102,10 +123,8 @@ class DoctrineEntityParser implements IEntityParser
                         /* @var $expressionHolder DoctrineExpressionHolder */
                         $expressionHolder = $valueHolderParser->parse($item);
                         $expr->add($expressionHolder->getExpression());
+                        $this->setParameters($expressionHolder, $queryBuilder);
 
-                        foreach ($expressionHolder->getKeyValuePairs() as $pair) {
-                            $queryBuilder->setParameter($pair->getKey(), $pair->getValue());
-                        }
                         break;
                 }
             }
@@ -120,19 +139,36 @@ class DoctrineEntityParser implements IEntityParser
         return $queryBuilder;
     }
 
-    private function getEntity($entityName)
+    /**
+     * Apply DoctrineExpressionHolder key value pairs as parameters to QueryBuilder.
+     *
+     * @param DoctrineExpressionHolder $expressionHolder
+     * @param QueryBuilder             $queryBuilder
+     */
+    private function setParameters(DoctrineExpressionHolder $expressionHolder, QueryBuilder $queryBuilder)
     {
-        if (!DoctrineEntityHelper::isEntity($this->entityManager, $entityName)) {
-            $namespaces = join(",", $this->entityManager->getConfiguration()->getEntityNamespaces());
-            throw new \InvalidArgumentException("${entityName} is not valid Entity in namespaces: ${namespaces}.");
+        foreach ($expressionHolder->getKeyValuePairs() as $pair) {
+            $queryBuilder->setParameter($pair->getKey(), $pair->getValue());
         }
+    }
 
-        dump($entityName);
+    /**
+     *
+     *
+     * TODO: determine type of join based on condition
+     * NOTE: test needed suspicious code.
+     *
+     * @param Relation     $relation
+     * @param QueryBuilder $queryBuilder
+     */
+    private function handleJoin(Relation $relation, QueryBuilder $queryBuilder)
+    {
+        $alias = $relation->getAlias();
 
-//        dump($this->entityManager->getClassMetadata($entityName)->getAssociationNames());
-//        dump($this->entityManager->getClassMetadata($entityName)->getAssociationMappings());
-//die();
-
-        return $entityName;
+        if ($relation->hasParent()) {
+            $queryBuilder->leftJoin($relation->getParent()->getAlias().'.'.$relation->getFieldIdentifier(), $alias);
+        } else {
+            $queryBuilder->leftJoin($this->rootAlias.'.'.$relation->getIdentifier(), $alias);
+        }
     }
 }
