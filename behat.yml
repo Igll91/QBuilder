@@ -20,6 +20,8 @@ default:
         value_holder_features:
           paths: ["%paths.base%/features/model/value_holder/parser"]
           contexts: ["Svuk\\Tests\\Model\\ValueHolder\\Parser\\ConditionOperatorValueHolderParserContext"]
-
+        relation_parser_features:
+          paths: ["%paths.base%/features/model/RelationParser"]
+          contexts: ["Svuk\\Tests\\Model\\RelationParser\\RelationHolderFactoryContext"]
     extensions:
         Behat\Symfony2Extension: ~
