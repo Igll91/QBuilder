@@ -7,6 +7,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    database_path: "%kernel.root_dir%/../data/db/qbuilder_dev.db3"
 
 framework:
     #esi:             ~
